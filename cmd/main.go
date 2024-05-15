@@ -9,29 +9,30 @@ import (
 )
 
 func main() {
-	startingCash := 100000
-	visualDelay := 0 * time.Millisecond
-	autoDelay := 0 * time.Second
-	seed := uint64(time.Now().UnixNano())
+	startingCash := 250                   // modify the starting cash, for simulations with 100000 spins you can set it 100000 to get more granularity
+	visualDelay := 100 * time.Millisecond // refreshing rate of the symbols, for testing/simulations you might want to set it to 0
+	autoDelay := 1 * time.Second          // delay between the auto spins, for testing/simulations you might want to set it to 0
+	runSim := false                       // set to true to run the simulation
 
-	// Seed the LCG with the current Unix timestamp
-	rng := randomizer.NewXorShiftRNG(seed)
+	seed := uint64(time.Now().UnixNano())
+	rng := randomizer.NewXorShiftRNG(seed) // switch the randomizer for observing different outcomes
+
 	game := wildfruits.NewSlotMachine(rng, visualDelay, startingCash)
+
 	disp := &display.ConsoleDisplay{}
-	//game.RegisterObserver(disp)
+	game.RegisterObserver(disp) // I suggest to comment this line out for simulations since it produces the console output and slows down simulations
+
 	m := manager.GameManager{
 		Game:      game,
 		Display:   disp,
 		AutoDelay: autoDelay,
 	}
 
-	//m.Play()
-
-	// Run simulation
-	totalSpins := 100000
-	betAmount := 1
-	m.AutomatedPlay(totalSpins, betAmount)
-
-	// Calculate and display results
-	disp.ShowStats(game, startingCash)
+	if runSim {
+		totalSpins := 100000
+		betAmount := 1
+		m.RunSimulation(totalSpins, betAmount)
+	} else {
+		m.Play()
+	}
 }

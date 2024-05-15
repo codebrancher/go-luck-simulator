@@ -101,8 +101,8 @@ func (s *SlotMachine) getLinePositions(lineIndex int) [][2]int {
 	return positions
 }
 
-func (s *SlotMachine) markWinningPositions(lineIndex int, line [3]string) {
-	positions := s.getLinePositions(lineIndex) // Get the positions of symbols in this line
+func (s *SlotMachine) markWinningPositions(lineIndex int) {
+	positions := s.getLinePositions(lineIndex)
 	for _, pos := range positions {
 		s.DisplayConfig.WinningPositions[pos[0]][pos[1]] = true
 	}

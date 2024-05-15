@@ -26,4 +26,5 @@ type DisplayState struct {
 	WinRate            float64
 	WinningPositions   map[int]map[int]bool
 	StartTime          time.Time
+	StartingCash       int
 }

@@ -1,7 +1,5 @@
 # Customizable Randomization
 
-In the Go Slot Machine, we understand the pivotal role that randomness plays in gaming and simulation. To cater to different needs and experimental setups, our game supports multiple randomization algorithms, each with unique characteristics:
-
 #### Available Randomizers
 
 - **Default RNG**: Utilizes Go's standard random number generation based on a pseudo-random algorithm, suitable for general use in games and simulations.
@@ -25,8 +23,8 @@ Example:
 rng := randomizer.NewLCG(seed)
 ``` 
 
-## Encouraging Exploration
+## Exploration
 
-We encourage you to experiment with these different randomizers to observe how they influence the game's behavior. Try using the LCG for a faster but less random experience, or switch to XorShift for high-quality randomness. Additionally, feel free to implement and test your own RNG algorithms to further explore game dynamics.
+Experiment with these different randomizers to observe how they influence the game's behavior. Try using the LCG for a faster but less random experience, or switch to XorShift for high-quality randomness. Additionally, feel free to implement and test your own RNG algorithms to further explore game dynamics.
 
 **Feel free to share your algorithms!**

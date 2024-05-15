@@ -70,7 +70,7 @@ func (gm *GameManager) Play() {
 		case "info":
 			gm.Display.ShowInfo(wildfruits.Symbols, gm.Game.GameState.Cash, gm.Game.GameConfig.WildSymbol)
 		case "stats":
-			gm.Display.ShowStats(gm.Game, 250)
+			gm.Display.ShowStats(gm.Game, gm.Game.GameState.StartingCash)
 		default:
 			gm.Display.Show("Invalid command. Please use 'info', 'stats', 'bet', 'auto', or 'exit'.")
 		}
@@ -91,6 +91,12 @@ func (gm *GameManager) AutomatedPlay(totalSpins int, betAmount int) {
 		gm.Game.DisplayResults()
 		time.Sleep(gm.AutoDelay)
 	}
+}
+
+func (gm *GameManager) RunSimulation(totalSpins, betAmount int) {
+	gm.Display.Show("Running simulation...")
+	gm.AutomatedPlay(totalSpins, betAmount)
+	gm.Display.ShowStats(gm.Game, gm.Game.GameState.StartingCash)
 }
 
 func (gm *GameManager) handleManualPlay(betInput string) error {

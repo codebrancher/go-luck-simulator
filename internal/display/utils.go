@@ -8,18 +8,16 @@ import (
 )
 
 func (cd *ConsoleDisplay) printCentered(text string, totalWidth int) {
-	visibleLength := len([]rune(text)) // Calculating length as number of runes for better accuracy
+	visibleLength := len([]rune(text))
 
-	// Calculate padding for both sides
 	totalPadding := totalWidth - visibleLength
 	if totalPadding < 0 {
-		totalPadding = 0 // Ensure there's no negative padding
+		totalPadding = 0
 	}
 
 	leftPadding := totalPadding / 2
-	rightPadding := totalPadding - leftPadding // Ensure total padding is distributed
+	rightPadding := totalPadding - leftPadding
 
-	// Construct the padded text
 	paddedText := fmt.Sprintf("|%s%s%s|", strings.Repeat(" ", leftPadding), text, strings.Repeat(" ", rightPadding))
 	fmt.Println(paddedText)
 }
@@ -28,14 +26,14 @@ func (cd *ConsoleDisplay) printLeftAligned(label string, totalWidth int) {
 
 	fullMessage := fmt.Sprintf(" %s", label)
 	if len(fullMessage) > totalWidth {
-		fullMessage = fullMessage[:totalWidth] // Truncate if it exceeds content width
+		fullMessage = fullMessage[:totalWidth]
 	}
 	padding := totalWidth - len(fullMessage)
 	fmt.Printf("|%s%s|\n", fullMessage, strings.Repeat(" ", padding))
 }
 
 func (cd *ConsoleDisplay) printWithMiddlePadding(leftValue, rightValue string, frameWidth int) {
-	contentWidth := frameWidth - 2 // Width available for content between the borders "|"
+	contentWidth := frameWidth - 2
 
 	leftLength := utf8.RuneCountInString(leftValue)
 	rightLength := utf8.RuneCountInString(rightValue)
@@ -79,15 +77,14 @@ func max(a, b int) int {
 }
 
 func formatDuration(d time.Duration) string {
-	// Breaking down the duration into hours, minutes, and seconds
 	hours := d / time.Hour
 	d %= time.Hour
 	minutes := d / time.Minute
 	d %= time.Minute
 	seconds := d / time.Second
-
-	// Return formatted string
-	return fmt.Sprintf("%02d:%02d:%02d", hours, minutes, seconds)
+	d %= time.Second
+	milliseconds := d / time.Millisecond
+	return fmt.Sprintf("%02d:%02d:%02d:%02d", hours, minutes, seconds, milliseconds)
 }
 
 // Helper to truncate string to the specified number of runes

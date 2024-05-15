@@ -43,6 +43,7 @@ type GameState struct {
 	MaxDrawdown           int
 	Wins                  []int
 	StartTime             time.Time
+	StartingCash          int
 }
 
 type DisplayConfig struct {
@@ -58,7 +59,7 @@ func NewSlotMachine(rng randomizer.Randomizer, visualDelay time.Duration, starti
 	// Initialize the nested maps for WinningPositions
 	winningPositions := make(map[int]map[int]bool)
 	for i := 0; i < 3; i++ {
-		winningPositions[i] = make(map[int]bool) // Ensure each row has its column map initialized
+		winningPositions[i] = make(map[int]bool)
 	}
 
 	// Create a new SlotMachine with all necessary fields initialized
@@ -84,6 +85,7 @@ func NewSlotMachine(rng randomizer.Randomizer, visualDelay time.Duration, starti
 			WinRate:               0,
 			PeakCash:              startingCash,
 			StartTime:             time.Now(),
+			StartingCash:          startingCash,
 		},
 		DisplayConfig: DisplayConfig{
 			WinningPositions: winningPositions,
@@ -170,7 +172,7 @@ func (s *SlotMachine) CalculateWinnings() (string, int) {
 			}
 			winAmount := s.GameState.LastBet * symbolPayouts[mainSymbol]
 			totalWinAmount += winAmount
-			s.markWinningPositions(i, line)
+			s.markWinningPositions(i)
 			if winDescriptions != "" {
 				winDescriptions += "\n"
 			}
