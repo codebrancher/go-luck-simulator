@@ -1,7 +1,14 @@
 ![Title](./screenshots/wildfruits_title.png)
 
 ## Description
-The Go Slot Machine is an open-source simulation written in Go designed to illustrate gaming strategies and randomness in slot machines. It serves as an educational tool for both Go developers and enthusiasts interested in game theory and development.
+
+**The Go Slot Machine** is an open-source, interactive simulation crafted in Go, aimed at demystifying the core mechanics behind slot machines. This project not only serves as an educational resource for exploring gaming strategies and the principles of randomness but also showcases the versatility and power of Go for software development.
+
+Designed with modularity in mind, the software allows users to experiment with different components such as random number generators (RNGs) and payout algorithms, making it an ideal platform for developers, students, and researchers interested in game theory, probability, and computer science education.
+
+The project's open-source nature under the GNU General Public License v3.0 encourages a collaborative approach, inviting contributions that enhance its architecture and expand its functionality. Whether you're learning to code in Go, interested in the mathematics of gambling, or exploring software architecture, **The Go Slot Machine** offers a hands-on way to develop your skills and understanding in a practical, engaging environment.
+
+The goal is to enhance the program by different games and other instances in a modular way.
 
 ## Disclaimer
 **Educational Purposes Only**: This project is intended strictly for educational purposes and is not to be used for gambling, betting, or any form of real money play. The simulation is designed to provide insights into how slot machines work and to foster learning and discussion around game design and randomness. It is not a guide for gambling or an endorsement of gambling and should not be used as such.
@@ -126,7 +133,7 @@ The program is intended to be as modular as possible to encourage experimentatio
 
 ### Game Engine
 
-The core logic and game mechanics of a specific game are implemented here. [Learn more about the game engine.](internal/engine/wildfruits/README.md)
+The core logic and game mechanics of a specific game are implemented here. [Learn more about the game engine.](internal/engine/README.md)
 
 ### Randomness Module
 
@@ -153,3 +160,18 @@ Since this is a learning experience for me as well, here are some basic steps to
 
 If you have questions about the project or need guidance on how to proceed, please feel free to open an issue in the repository. This is a learning experience for all of us, and every question or piece of feedback is valuable!
 
+## License
+
+The Go Slot Machine is open source and available under the GNU General Public License v3.0 (GPL-3.0). This license allows you to use, modify, and distribute the software, but all derivatives of this project must also be released under the same GPL-3.0 license.
+
+For more details, see the [LICENSE](LICENSE) file included in the repository.
+
+I chose the GPL-3.0 to ensure that all modifications and improvements to the project remain free and accessible, fostering a community of collaboration and shared improvement.
+
+## Contact
+
+If you have any questions, feedback, or would like to contribute to the Go Slot Machine project, please feel free to reach out through my [Twitter/X Account](https://twitter.com/codebrancher) or on GitHub.
+
+For more detailed discussions, issue reporting, or to propose new features, consider opening an issue directly on the GitHub project page. This helps us keep track of all project-related discussions in one place.
+
+Your input is incredibly valuable, and I look forward to hearing from you!
