@@ -1,4 +1,4 @@
-![Title](./screenshots/wf_title.png)
+![Title](./screenshots/wf_game_title.png)
 
 ## Description
 
@@ -91,11 +91,15 @@ stats
 
 ## Features
 
-### Wild Fruits Game Info (5 winning lines)
+Since this is a learning experience for me as well, here are some basic steps to get involved:
 
+1. **Customizable Gameplay Settings**: Adjust starting cash, visual delay, and automatic spin intervals to suit various simulation or gameplay needs.
+2. **Advanced Randomization**:  Choose from several randomizers, including the standard RNG, LCG, and XorShift, to ensure game fairness and complexity.
+3. **Dynamic Game Mechanics**: Offers five potential winning lines and special features like bonus games that can extend by hitting additional bonus symbols.
+4. **Interactive Commands**: Utilize commands such as bet, auto, and stats for real-time game management and engagement.
+5. **Simulation Mode**: Toggle between interactive gameplay and simulation mode to conduct extensive tests or enjoy casual play.
 
-
-**Additional Info**: The bonus symbols doesn't have to be in line to trigger bonus games. While you are in the bonus games hitting 3 more bonus symbols will extend the bonus games by 2.
+**Additional Game Info**: The bonus symbols doesn't have to be in line to trigger bonus games. While you are in the bonus games hitting three more bonus symbols will extend the bonus games by two. For more infos on the game features checkout the screenshots.
 
 ## Insights
 
@@ -143,7 +147,7 @@ This module handles all random number generation used in the game. The program s
 
 ### Automated Play Simulation
 
-For understanding the simulation setup and its configurations, refer to the documentation provided here. [Automated play and statistics.](src/simulation/README.md)
+For understanding the simulation setup and its configurations, refer to the documentation provided here. [Automated play and statistics.](cmd/README.md)
 
 ## Contributing
 
