@@ -8,4 +8,5 @@ type Display interface {
 	ClearScreen()
 	ShowInfo(symbols []wildfruits.Symbol, game *wildfruits.SlotMachine)
 	ShowStats(game *wildfruits.SlotMachine)
+	ShowStartupInfo()
 }

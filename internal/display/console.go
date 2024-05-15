@@ -14,6 +14,27 @@ func (cd *ConsoleDisplay) Show(message string) {
 	fmt.Println(message)
 }
 
+func (cd *ConsoleDisplay) ShowStartupInfo() {
+	cd.ClearScreen()
+	frameWidth := 32
+	contentWidth := frameWidth - 2
+
+	border := strings.Repeat("=", frameWidth)
+	fmt.Println(border)
+	cd.printBlankLine()
+	cd.printCentered("The Go Slot Machine!", contentWidth)
+	cd.printBlankLine()
+	cd.printIntermediaryLine()
+	cd.printCentered("Commands", contentWidth)
+	cd.printIntermediaryLine()
+	cd.printBlankLine()
+	cd.printLeftAligned("play", contentWidth)
+	cd.printBlankLine()
+	cd.printLeftAligned("sim [spins] [bet]", contentWidth)
+	fmt.Println(border)
+	fmt.Println()
+}
+
 func (cd *ConsoleDisplay) ShowWheels(wheels [3][3]string) {}
 
 func (cd *ConsoleDisplay) ShowInfo(symbols []wildfruits.Symbol, game *wildfruits.SlotMachine) {

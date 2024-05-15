@@ -6,6 +6,15 @@ func (s *SlotMachine) RegisterObserver(o engine.Observer) {
 	s.observers = append(s.observers, o)
 }
 
+func (s *SlotMachine) UnregisterObserver(o engine.Observer) {
+	for i, observer := range s.observers {
+		if observer == o {
+			s.observers = append(s.observers[:i], s.observers[i+1:]...)
+			break
+		}
+	}
+}
+
 func (s *SlotMachine) NotifyObservers() {
 	state := engine.DisplayState{
 		Title:              s.Title,
@@ -26,4 +35,12 @@ func (s *SlotMachine) NotifyObservers() {
 	for _, observer := range s.observers {
 		observer.Update(state)
 	}
+}
+
+func (s *SlotMachine) EnableObserver() {
+	s.RegisterObserver(s.display)
+}
+
+func (s *SlotMachine) DisableObserver() {
+	s.UnregisterObserver(s.display)
 }
