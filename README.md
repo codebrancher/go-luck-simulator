@@ -37,7 +37,7 @@ The goal is to enhance the program by different games and other instances in a m
 
 ```sh
 git clone https://github.com/codebrancher/go-slot-machine.git
-cd go-slot-machine
+cd go-slot-machine/cmd
 ```
 
 2. Build the project:
