@@ -93,6 +93,7 @@ func NewSlotMachine(rng randomizer.Randomizer, visualDelay time.Duration, starti
 	return sm
 }
 func (s *SlotMachine) Spin() error {
+	// Reset winning positions
 	for i := range s.GameConfig.Wheels {
 		for j := range s.GameConfig.Wheels[i] {
 			s.DisplayConfig.WinningPositions[i][j] = false
@@ -115,9 +116,9 @@ func (s *SlotMachine) Spin() error {
 	// Lock or reset positions based on bonus state
 	if s.GameState.BonusGames > 0 {
 		s.lockBonusSymbols()
-		s.GameState.BonusGames-- // Decrement bonus games after the spin
+		s.GameState.BonusGames--
 		if s.GameState.BonusGames == 0 {
-			s.resetLockedPositions() // Ensure locked positions are reset after the last free game
+			s.resetLockedPositions()
 		}
 	} else {
 		s.resetLockedPositions()
@@ -195,13 +196,13 @@ func (s *SlotMachine) RequestBet(input string) (int, error) {
 
 	if input == "" {
 		if s.GameState.LastBet == 0 || s.GameState.LastBet > s.GameState.Cash {
-			return 0, fmt.Errorf("invalid rebet amount. No previous bet or insufficient funds")
+			return 0, fmt.Errorf("invalid re-bet amount")
 		}
 		bet = s.GameState.LastBet
 	} else {
 		bet, err = strconv.Atoi(input)
 		if err != nil || bet < 0 || bet > s.GameState.Cash {
-			return 0, fmt.Errorf("invalid bet. Please enter a valid amount")
+			return 0, fmt.Errorf("invalid bet")
 		}
 	}
 

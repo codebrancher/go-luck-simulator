@@ -9,29 +9,29 @@ import (
 )
 
 func main() {
-	startingCash := 250
-	visualDelay := 100 * time.Millisecond
-	autoDelay := 1 * time.Second
+	startingCash := 100000
+	visualDelay := 0 * time.Millisecond
+	autoDelay := 0 * time.Second
 	seed := uint64(time.Now().UnixNano())
 
 	// Seed the LCG with the current Unix timestamp
 	rng := randomizer.NewXorShiftRNG(seed)
 	game := wildfruits.NewSlotMachine(rng, visualDelay, startingCash)
 	disp := &display.ConsoleDisplay{}
-	game.RegisterObserver(disp)
+	//game.RegisterObserver(disp)
 	m := manager.GameManager{
 		Game:      game,
 		Display:   disp,
 		AutoDelay: autoDelay,
 	}
 
-	m.Play()
+	//m.Play()
 
-	//// Run simulation
-	//totalSpins := 100000
-	//betAmount := 1
-	//m.AutomatedPlay(totalSpins, betAmount)
-	//
-	//// Calculate and display results
-	//disp.ShowStats(game, startingCash)
+	// Run simulation
+	totalSpins := 100000
+	betAmount := 1
+	m.AutomatedPlay(totalSpins, betAmount)
+
+	// Calculate and display results
+	disp.ShowStats(game, startingCash)
 }

@@ -7,8 +7,8 @@ type Symbol struct {
 }
 
 var Symbols = []Symbol{
-	{"💎", 10, 5}, // Keep high payout but very rare
-	{"🍉", 5, 7},
+	{"🍉", 10, 5}, // Keep high payout but very rare
+	{"🥥", 5, 7},
 	{"🌟", 5, 7}, // wild triggers free games
 	{"🫐", 3, 8},
 	{"🍇", 3, 8},
@@ -28,4 +28,14 @@ func (s *SlotMachine) countWildSymbols() int {
 		}
 	}
 	return wildCount
+}
+
+func generateWeightedSymbols() []string {
+	var weightedSymbols []string
+	for _, sym := range Symbols {
+		for i := 0; i < sym.Frequency; i++ {
+			weightedSymbols = append(weightedSymbols, sym.Representation)
+		}
+	}
+	return weightedSymbols
 }

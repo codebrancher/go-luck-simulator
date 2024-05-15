@@ -74,16 +74,6 @@ func getMainSymbol(line [3]string) string {
 	return mainSymbol
 }
 
-func generateWeightedSymbols() []string {
-	var weightedSymbols []string
-	for _, sym := range Symbols {
-		for i := 0; i < sym.Frequency; i++ {
-			weightedSymbols = append(weightedSymbols, sym.Representation)
-		}
-	}
-	return weightedSymbols
-}
-
 func generateInitialWheels(weightedSymbols []string) [3][3]string {
 	var wheels [3][3]string
 	for i := 0; i < 3; i++ { // Iterate over columns

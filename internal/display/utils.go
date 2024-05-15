@@ -24,13 +24,13 @@ func (cd *ConsoleDisplay) printCentered(text string, totalWidth int) {
 	fmt.Println(paddedText)
 }
 
-func (cd *ConsoleDisplay) printLeftAligned(label string, width int) {
+func (cd *ConsoleDisplay) printLeftAligned(label string, totalWidth int) {
 
 	fullMessage := fmt.Sprintf(" %s", label)
-	if len(fullMessage) > width {
-		fullMessage = fullMessage[:width] // Truncate if it exceeds content width
+	if len(fullMessage) > totalWidth {
+		fullMessage = fullMessage[:totalWidth] // Truncate if it exceeds content width
 	}
-	padding := width - len(fullMessage)
+	padding := totalWidth - len(fullMessage)
 	fmt.Printf("|%s%s|\n", fullMessage, strings.Repeat(" ", padding))
 }
 
@@ -57,14 +57,6 @@ func (cd *ConsoleDisplay) printWithMiddlePadding(leftValue, rightValue string, f
 
 	padding := contentWidth - totalLength // Calculate the padding needed in the middle
 	fmt.Printf("|%s%s%s|\n", leftValue, strings.Repeat(" ", padding), rightValue)
-}
-
-// Helper to truncate string to the specified number of runes
-func truncateString(s string, num int) string {
-	if num >= utf8.RuneCountInString(s) {
-		return s
-	}
-	return string([]rune(s)[:num])
 }
 
 func (cd *ConsoleDisplay) printBlankLine() {
@@ -96,4 +88,12 @@ func formatDuration(d time.Duration) string {
 
 	// Return formatted string
 	return fmt.Sprintf("%02d:%02d:%02d", hours, minutes, seconds)
+}
+
+// Helper to truncate string to the specified number of runes
+func truncateString(s string, num int) string {
+	if num >= utf8.RuneCountInString(s) {
+		return s
+	}
+	return string([]rune(s)[:num])
 }
