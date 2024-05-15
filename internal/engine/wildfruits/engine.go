@@ -24,6 +24,7 @@ type GameConfig struct {
 	WildSymbol      string
 	BonusSymbol     string
 	VisualDelay     time.Duration
+	Currency        string
 }
 
 type GameState struct {
@@ -52,7 +53,7 @@ type DisplayConfig struct {
 	WinningPositions    map[int]map[int]bool
 }
 
-func NewSlotMachine(rng randomizer.Randomizer, visualDelay time.Duration, startingCash int) *SlotMachine {
+func NewSlotMachine(rng randomizer.Randomizer, visualDelay time.Duration, startingCash int, currency string) *SlotMachine {
 	// Generate the weighted symbols list once
 	weightedSymbols := generateWeightedSymbols()
 
@@ -72,6 +73,7 @@ func NewSlotMachine(rng randomizer.Randomizer, visualDelay time.Duration, starti
 			WildSymbol:      "🌟",
 			BonusSymbol:     "  ",
 			VisualDelay:     visualDelay,
+			Currency:        currency,
 		},
 		GameState: GameState{
 			Cash:                  startingCash,
@@ -146,9 +148,9 @@ func (s *SlotMachine) DisplayResults() {
 	s.GameState.TotalWinAmount += winAmount
 	// Notify observers after calculating and displaying the win for this spin
 	s.DisplayConfig.WinningDescription = winningDescriptions
-	s.GameState.TotalWinAmountPerSpin = winAmount // Reset TotalWin to the current round's win amount for accurate display
+	s.GameState.TotalWinAmountPerSpin = winAmount
 	s.GameState.WinRate = s.calculateWinRate()
-	s.NotifyObservers() // Ensure observers are updated with the latest state right after computing results
+	s.NotifyObservers()
 }
 
 func (s *SlotMachine) CalculateWinnings() (string, int) {
@@ -176,7 +178,7 @@ func (s *SlotMachine) CalculateWinnings() (string, int) {
 			if winDescriptions != "" {
 				winDescriptions += "\n"
 			}
-			winDescriptions += fmt.Sprintf("%s on line %d: $%d", mainSymbol, i+1, winAmount)
+			winDescriptions += fmt.Sprintf("%s on line %d: %d%s", mainSymbol, i+1, winAmount, s.GameConfig.Currency)
 		}
 	}
 	// Update TopWinAmount if the total win amount is greater than the current TopWinAmount
@@ -193,7 +195,7 @@ func (s *SlotMachine) RequestBet(input string) (int, error) {
 	var err error
 
 	if s.GameState.BonusGames > 0 {
-		return 0, nil // No bet needed during free spins
+		return 0, nil
 	}
 
 	if input == "" {
@@ -222,7 +224,7 @@ func (s *SlotMachine) spinWheels() {
 }
 
 func (s *SlotMachine) spinColumn(col int) {
-	for spin := 0; spin < 20; spin++ { // Simulate spinning effect
+	for spin := 0; spin < 20; spin++ {
 		s.updateColumnSymbols(col)
 		s.NotifyObservers()
 		time.Sleep(s.GameConfig.VisualDelay)

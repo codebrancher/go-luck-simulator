@@ -7,7 +7,7 @@ type Symbol struct {
 }
 
 var Symbols = []Symbol{
-	{"🍉", 10, 5}, // Keep high payout but very rare
+	{"🍉", 10, 5},
 	{"🥥", 5, 7},
 	{"🌟", 5, 7}, // wild triggers free games
 	{"🫐", 3, 8},
@@ -15,7 +15,7 @@ var Symbols = []Symbol{
 	{"🍏", 2, 10},
 	{"🍓", 2, 10},
 	{"🍊", 2, 10},
-	{"🍒", 1, 35}, // Increase frequency to make very common, very low payout
+	{"🍒", 1, 35},
 }
 
 func (s *SlotMachine) countWildSymbols() int {

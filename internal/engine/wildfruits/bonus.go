@@ -17,14 +17,12 @@ func (s *SlotMachine) chooseBonusSymbol() {
 
 	if len(filteredSymbols) > 0 {
 		var index int
-		// Simulate a more dynamic "spinning wheel" effect
 		for spin := 0; spin < 30; spin++ {
 			index = s.RNG.Intn(len(filteredSymbols))
 			s.GameConfig.BonusSymbol = filteredSymbols[index]
 			s.NotifyObservers() // Notify observers with each change to update the display dynamically
 			time.Sleep(s.GameConfig.VisualDelay)
 		}
-		// Final selection, ensure it's updated one last time if needed
 		s.GameConfig.BonusSymbol = filteredSymbols[index]
 		s.NotifyObservers()
 	} else {
@@ -52,8 +50,8 @@ func (s *SlotMachine) lockBonusSymbols() {
 }
 
 func (s *SlotMachine) handleBonusGameInitiation() {
-	if s.GameState.BonusGames == 0 { // Only initiate new bonus games if none are active
-		s.chooseBonusSymbol()       // Choose a new bonus symbol
+	if s.GameState.BonusGames == 0 {
+		s.chooseBonusSymbol()
 		s.GameState.BonusGames += 7 // Start 7 free games
 		s.DisplayConfig.BonusGamesInitiated++
 	} else {

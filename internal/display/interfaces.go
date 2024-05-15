@@ -6,6 +6,6 @@ type Display interface {
 	Show(message string)
 	ShowWheels(wheels [3][3]string)
 	ClearScreen()
-	ShowInfo(symbols []wildfruits.Symbol, initialCash int, wildSymbol string)
-	ShowStats(game *wildfruits.SlotMachine, startingCash int)
+	ShowInfo(symbols []wildfruits.Symbol, game *wildfruits.SlotMachine)
+	ShowStats(game *wildfruits.SlotMachine)
 }

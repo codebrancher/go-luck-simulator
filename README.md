@@ -1,4 +1,4 @@
-![Title](./screenshots/wildfruitsgame_title.png)
+![Title](./screenshots/wildfruits_title.png)
 
 ## Description
 
@@ -19,6 +19,7 @@ The goal is to enhance the program by different games and other instances in a m
 - [Usage](#usage)
 - [Features](#features)
 - [Customization](#customization)
+- [Insights](#insights)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
@@ -28,6 +29,7 @@ The goal is to enhance the program by different games and other instances in a m
 ### Prerequisites
 
 - Go 1.22 or later
+- Terminal with Unicode (UTF-8) (only for playing)
 
 ### Installation
 
@@ -95,9 +97,9 @@ stats
 
 **Additional Info**: The bonus symbols doesn't have to be in line to trigger bonus games. While you are in the bonus games hitting 3 more bonus symbols will extend the bonus games by 2.
 
-#### Insights
+## Insights
 
-The Wild Fruits game is designed to offer a realistic and engaging gambling simulation. The following statistics were gathered over a simulated set of 100,000 spins to provide potential players and developers with an understanding of the game dynamics and expected outcomes.
+The following statistics were gathered over a simulated set of 100,000 spins to provide potential players and developers with an understanding of the game dynamics and expected outcomes.
 
 **Simulation Statistics Overview with default settings:**
 

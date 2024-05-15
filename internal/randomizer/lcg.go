@@ -14,7 +14,7 @@ func NewLCG(seed uint64) *LCG {
 }
 
 func (lcg *LCG) Intn(n int) int {
-	// Constants for the LCG (example values, you might need to choose more suitable ones)
+	// Constants for the LCG
 	const a = 1664525    // Multiplier
 	const c = 1013904223 // Increment
 	const m = 4294967296 // Modulus (2^32)

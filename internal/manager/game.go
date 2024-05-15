@@ -19,8 +19,8 @@ type GameManager struct {
 
 func (gm *GameManager) Play() {
 	inputReader := bufio.NewReader(os.Stdin)
-	lastValidBet := "" // Store the last valid bet command for rebets
-	gm.Display.ShowInfo(wildfruits.Symbols, gm.Game.GameState.Cash, gm.Game.GameConfig.WildSymbol)
+	lastValidBet := ""
+	gm.Display.ShowInfo(wildfruits.Symbols, gm.Game)
 	for {
 		gm.Display.Show("Ready? Enter command:")
 		input, _ := inputReader.ReadString('\n')
@@ -36,7 +36,7 @@ func (gm *GameManager) Play() {
 			continue
 		}
 
-		commandParts := strings.Fields(input) // Splits input into parts
+		commandParts := strings.Fields(input)
 		if len(commandParts) == 0 {
 			continue
 		}
@@ -65,12 +65,12 @@ func (gm *GameManager) Play() {
 			if err := gm.handleManualPlay(commandParts[1]); err != nil {
 				gm.Display.Show("Error: " + err.Error())
 			} else {
-				lastValidBet = input // Update last valid bet
+				lastValidBet = input
 			}
 		case "info":
-			gm.Display.ShowInfo(wildfruits.Symbols, gm.Game.GameState.Cash, gm.Game.GameConfig.WildSymbol)
+			gm.Display.ShowInfo(wildfruits.Symbols, gm.Game)
 		case "stats":
-			gm.Display.ShowStats(gm.Game, gm.Game.GameState.StartingCash)
+			gm.Display.ShowStats(gm.Game)
 		default:
 			gm.Display.Show("Invalid command. Please use 'info', 'stats', 'bet', 'auto', or 'exit'.")
 		}
@@ -78,7 +78,7 @@ func (gm *GameManager) Play() {
 }
 
 func (gm *GameManager) AutomatedPlay(totalSpins int, betAmount int) {
-	betStr := strconv.Itoa(betAmount) + "\n" // Convert bet amount to string for the betting system
+	betStr := strconv.Itoa(betAmount) + "\n"
 	for i := 0; i < totalSpins; i++ {
 		if _, err := gm.Game.RequestBet(betStr); err != nil {
 			gm.Display.Show("Error: " + err.Error())
@@ -96,7 +96,7 @@ func (gm *GameManager) AutomatedPlay(totalSpins int, betAmount int) {
 func (gm *GameManager) RunSimulation(totalSpins, betAmount int) {
 	gm.Display.Show("Running simulation...")
 	gm.AutomatedPlay(totalSpins, betAmount)
-	gm.Display.ShowStats(gm.Game, gm.Game.GameState.StartingCash)
+	gm.Display.ShowStats(gm.Game)
 }
 
 func (gm *GameManager) handleManualPlay(betInput string) error {
@@ -104,7 +104,7 @@ func (gm *GameManager) handleManualPlay(betInput string) error {
 	if err != nil {
 		return err
 	}
-	if bet == 0 && gm.Game.GameState.BonusGames == 0 { // Ensure not to exit if in bonus games
+	if bet == 0 && gm.Game.GameState.BonusGames == 0 {
 		gm.Display.Show("No bet placed or invalid input; please try again.")
 		return fmt.Errorf("no bet placed")
 	}

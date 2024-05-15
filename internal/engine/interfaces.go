@@ -27,4 +27,5 @@ type DisplayState struct {
 	WinningPositions   map[int]map[int]bool
 	StartTime          time.Time
 	StartingCash       int
+	Currency           string
 }

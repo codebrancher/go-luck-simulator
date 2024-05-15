@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"go-slot-machine/internal/engine"
 	"go-slot-machine/internal/engine/wildfruits"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -17,7 +16,7 @@ func (cd *ConsoleDisplay) Show(message string) {
 
 func (cd *ConsoleDisplay) ShowWheels(wheels [3][3]string) {}
 
-func (cd *ConsoleDisplay) ShowInfo(symbols []wildfruits.Symbol, cash int, wildSymbol string) {
+func (cd *ConsoleDisplay) ShowInfo(symbols []wildfruits.Symbol, game *wildfruits.SlotMachine) {
 	cd.ClearScreen()
 
 	frameWidth := 32
@@ -28,23 +27,23 @@ func (cd *ConsoleDisplay) ShowInfo(symbols []wildfruits.Symbol, cash int, wildSy
 	fmt.Println(border)
 	cd.printBlankLine()
 	cd.printCentered("The Go Slot Machine!", contentWidth)
-	cd.printCentered("🍒 Wild Fruits 🍒", contentWidthUnicode)
+	cd.printCentered(game.Title, contentWidthUnicode)
 	cd.printBlankLine()
 	cd.printIntermediaryLine()
 
 	// Explanation of Wild Symbol and Bonus Games
-	wildSymbolDescription := fmt.Sprintf("3x %s for 7 Bonus Games!", wildSymbol)
+	wildSymbolDescription := fmt.Sprintf("3x %s for 7 Bonus Games!", game.GameConfig.WildSymbol)
 	cd.printCentered("Features", contentWidth)
 	cd.printIntermediaryLine()
 	cd.printCentered(wildSymbolDescription, contentWidth-1)
-	cd.printCentered(fmt.Sprintf("%s is wild!", wildSymbol), contentWidth-1)
+	cd.printCentered(fmt.Sprintf("%s is wild!", game.GameConfig.WildSymbol), contentWidth-1)
 	cd.printIntermediaryLine()
 
 	// High Value and Special Symbols
 	cd.printCentered("High & Special Value", contentWidth)
 	cd.printIntermediaryLine()
 	for _, sym := range symbols {
-		if sym.Payout >= 5 || sym.Representation == wildSymbol {
+		if sym.Payout >= 5 || sym.Representation == game.GameConfig.WildSymbol {
 			repeatedSymbol := strings.Repeat(sym.Representation, 3)
 			payoutInfo := fmt.Sprintf("%s %dx", repeatedSymbol, sym.Payout)
 			cd.printCentered(payoutInfo, contentWidthUnicode-1)
@@ -59,7 +58,7 @@ func (cd *ConsoleDisplay) ShowInfo(symbols []wildfruits.Symbol, cash int, wildSy
 	eligibleSymbols := make([]string, 0)
 
 	for _, sym := range symbols {
-		if sym.Payout < 5 && sym.Representation != wildSymbol {
+		if sym.Payout < 5 && sym.Representation != game.GameConfig.WildSymbol {
 			repeatedSymbol := strings.Repeat(sym.Representation, 3)
 			payoutInfo := fmt.Sprintf("%s %dx", repeatedSymbol, sym.Payout)
 			eligibleSymbols = append(eligibleSymbols, payoutInfo)
@@ -76,12 +75,12 @@ func (cd *ConsoleDisplay) ShowInfo(symbols []wildfruits.Symbol, cash int, wildSy
 
 	cd.printIntermediaryLine()
 	cd.printBlankLine()
-	cd.printCentered(fmt.Sprintf("Your cash: $%d", cash), contentWidth)
+	cd.printCentered(fmt.Sprintf("Your cash: %d%s", game.GameState.Cash, game.GameConfig.Currency), contentWidth)
 	cd.printBlankLine()
 	fmt.Println(border)
-	fmt.Println() // Extra space for aesthetic spacing
+	fmt.Println()
 }
-func (cd *ConsoleDisplay) ShowStats(game *wildfruits.SlotMachine, startingCash int) {
+func (cd *ConsoleDisplay) ShowStats(game *wildfruits.SlotMachine) {
 	cd.ClearScreen()
 	frameWidth := 32
 	contentWidth := frameWidth - 2
@@ -97,7 +96,7 @@ func (cd *ConsoleDisplay) ShowStats(game *wildfruits.SlotMachine, startingCash i
 	}
 	averagePayout := float64(game.GameState.TotalWinAmount) / float64(game.GameState.TotalWins)
 	hitFrequency := float64(game.GameState.TotalWins) / float64(game.GameState.TotalSpins) * 100
-	profitability := game.GameState.Cash - startingCash
+	profitability := game.GameState.Cash - game.GameState.StartingCash
 
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
@@ -116,16 +115,16 @@ func (cd *ConsoleDisplay) ShowStats(game *wildfruits.SlotMachine, startingCash i
 	cd.printWithMiddlePadding(" Bonus games initiated", fmt.Sprintf("%d ", game.DisplayConfig.BonusGamesInitiated), frameWidth)
 	cd.printIntermediaryLine()
 	cd.printBlankLine()
-	cd.printWithMiddlePadding(" Starting cash", fmt.Sprintf("$%d ", startingCash), frameWidth)
-	cd.printWithMiddlePadding(" Current cash", fmt.Sprintf("$%d ", game.GameState.Cash), frameWidth)
-	cd.printWithMiddlePadding(" Total win amount", fmt.Sprintf("$%d ", game.GameState.TotalWinAmount), frameWidth)
-	cd.printWithMiddlePadding(" Total bet amount", fmt.Sprintf("$%d ", game.GameState.TotalBetAmount), frameWidth)
-	cd.printWithMiddlePadding(" Max drawdown", fmt.Sprintf("$%d ", game.GameState.MaxDrawdown), frameWidth)
+	cd.printWithMiddlePadding(" Starting cash", fmt.Sprintf("%d%s ", game.GameState.StartingCash, game.GameConfig.Currency), frameWidth)
+	cd.printWithMiddlePadding(" Current cash", fmt.Sprintf("%d%s ", game.GameState.Cash, game.GameConfig.Currency), frameWidth)
+	cd.printWithMiddlePadding(" Total win amount", fmt.Sprintf("%d%s ", game.GameState.TotalWinAmount, game.GameConfig.Currency), frameWidth)
+	cd.printWithMiddlePadding(" Total bet amount", fmt.Sprintf("%d%s ", game.GameState.TotalBetAmount, game.GameConfig.Currency), frameWidth)
+	cd.printWithMiddlePadding(" Max drawdown", fmt.Sprintf("%d%s ", game.GameState.MaxDrawdown, game.GameConfig.Currency), frameWidth)
 	cd.printWithMiddlePadding(" Net profit/loss", fmt.Sprintf("%d ", profitability), frameWidth)
-	cd.printWithMiddlePadding(" Average bet", fmt.Sprintf("$%.0f ", avgBetAmount), frameWidth)
-	cd.printWithMiddlePadding(" Average win", fmt.Sprintf("$%.2f ", averagePayout), frameWidth)
+	cd.printWithMiddlePadding(" Average bet", fmt.Sprintf("%.0f%s ", avgBetAmount, game.GameConfig.Currency), frameWidth)
+	cd.printWithMiddlePadding(" Average win", fmt.Sprintf("%.2f%s ", averagePayout, game.GameConfig.Currency), frameWidth)
 	cd.printWithMiddlePadding(" Volatility", fmt.Sprintf("%.2f ", game.CalculateWinDeviation()), frameWidth)
-	cd.printWithMiddlePadding(" Top win", fmt.Sprintf("$%d ", game.GameState.TopWinAmount), frameWidth)
+	cd.printWithMiddlePadding(" Top win", fmt.Sprintf("%d%s ", game.GameState.TopWinAmount, game.GameConfig.Currency), frameWidth)
 	fmt.Println(border)
 	fmt.Println()
 
@@ -179,9 +178,9 @@ func (cd *ConsoleDisplay) Update(state engine.DisplayState) {
 	fmt.Println("|       ================       |")
 	cd.printBlankLine()
 	if state.TotalWinAmount > 0 {
-		cd.printCentered(fmt.Sprintf("\033[38;5;22m*** $%d ***\033[0m", state.TotalWinAmount), contentWidth+14)
+		cd.printCentered(fmt.Sprintf("\033[38;5;22m*** %d%s ***\033[0m", state.TotalWinAmount, state.Currency), contentWidth+14)
 	} else {
-		cd.printCentered(fmt.Sprintf("*** $%d ***", state.TotalWinAmount), contentWidth)
+		cd.printCentered(fmt.Sprintf("*** %d%s ***", state.TotalWinAmount, state.Currency), contentWidth)
 	}
 	cd.printBlankLine()
 
@@ -194,8 +193,12 @@ func (cd *ConsoleDisplay) Update(state engine.DisplayState) {
 	}
 	cd.printIntermediaryLine()
 	cd.printBlankLine()
-	cd.printWithMiddlePadding(" Bet : $"+strconv.Itoa(state.LastBet), "Top Win: $"+strconv.Itoa(state.TopWinAmount)+" ", contentWidth+2)
-	cd.printWithMiddlePadding(" Cash: $"+strconv.Itoa(state.Cash), "Win Rate: "+strconv.Itoa(int(state.WinRate))+"% ", contentWidth+2)
+	leftValLine1 := fmt.Sprintf(" Bet: %d%s", state.LastBet, state.Currency)
+	rightValLine1 := fmt.Sprintf("Top Win: %d%s ", state.TopWinAmount, state.Currency)
+	cd.printWithMiddlePadding(leftValLine1, rightValLine1, contentWidth+2)
+	leftValLine2 := fmt.Sprintf(" Cash: %d%s", state.Cash, state.Currency)
+	rightValLine2 := fmt.Sprintf("Win Rate: %d%% ", int(state.WinRate))
+	cd.printWithMiddlePadding(leftValLine2, rightValLine2, contentWidth+2)
 	cd.printBlankLine()
 	fmt.Println(border)
 	fmt.Println()

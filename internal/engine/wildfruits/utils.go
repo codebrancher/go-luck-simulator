@@ -51,7 +51,6 @@ func isWinningLine(line [3]string) bool {
 			uniqueSymbols[symbol] = true
 		}
 	}
-	// If there is only one type of non-wild symbol or all are wilds, it's a win
 	return len(uniqueSymbols) <= 1
 }
 
@@ -76,8 +75,8 @@ func getMainSymbol(line [3]string) string {
 
 func generateInitialWheels(weightedSymbols []string) [3][3]string {
 	var wheels [3][3]string
-	for i := 0; i < 3; i++ { // Iterate over columns
-		for j := 0; j < 3; j++ { // Iterate over rows
+	for i := 0; i < 3; i++ {
+		for j := 0; j < 3; j++ {
 			wheels[i][j] = weightedSymbols[rand.Intn(len(weightedSymbols))]
 		}
 	}

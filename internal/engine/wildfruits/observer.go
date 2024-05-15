@@ -21,6 +21,7 @@ func (s *SlotMachine) NotifyObservers() {
 		WinningPositions:   s.DisplayConfig.WinningPositions,
 		StartTime:          s.GameState.StartTime,
 		StartingCash:       s.GameState.StartingCash,
+		Currency:           s.GameConfig.Currency,
 	}
 	for _, observer := range s.observers {
 		observer.Update(state)
