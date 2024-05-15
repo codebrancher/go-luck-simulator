@@ -1,4 +1,4 @@
-![Title](./screenshots/wildfruits_title.png)
+![Title](./screenshots/wildfruitsgame_title.png)
 
 ## Description
 
@@ -91,7 +91,7 @@ stats
 
 ### Wild Fruits Game Info (5 winning lines)
 
-![Wildfruits-Info](./screenshots/wildfruits_info.png)
+
 
 **Additional Info**: The bonus symbols doesn't have to be in line to trigger bonus games. While you are in the bonus games hitting 3 more bonus symbols will extend the bonus games by 2.
 
