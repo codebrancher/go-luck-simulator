@@ -3,6 +3,7 @@ package wildfruits
 import (
 	"math"
 	"math/rand"
+	"time"
 )
 
 func (s *SlotMachine) calculateWinRate() float64 {
@@ -105,4 +106,8 @@ func (s *SlotMachine) markWinningPositions(lineIndex int) {
 	for _, pos := range positions {
 		s.DisplayConfig.WinningPositions[pos[0]][pos[1]] = true
 	}
+}
+
+func (s *SlotMachine) SetVisualDelay(delay time.Duration) {
+	s.GameConfig.VisualDelay = delay
 }

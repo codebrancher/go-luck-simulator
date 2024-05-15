@@ -12,9 +12,63 @@ import (
 )
 
 type GameManager struct {
-	Game      *wildfruits.SlotMachine
-	Display   display.Display
-	AutoDelay time.Duration
+	Game        *wildfruits.SlotMachine
+	Display     display.Display
+	AutoDelay   time.Duration
+	VisualDelay time.Duration
+}
+
+func NewGameManager(game *wildfruits.SlotMachine, display display.Display) *GameManager {
+	return &GameManager{
+		Game:        game,
+		Display:     display,
+		AutoDelay:   0,
+		VisualDelay: 0,
+	}
+}
+
+func (gm *GameManager) Start() {
+	reader := bufio.NewReader(os.Stdin)
+	gm.Display.ShowStartupInfo()
+	for {
+		fmt.Print("Enter command: ")
+		command, _ := reader.ReadString('\n')
+		command = strings.TrimSpace(command)
+		args := strings.Fields(command)
+
+		if len(args) == 0 {
+			continue
+		}
+
+		switch strings.ToLower(args[0]) {
+		case "play":
+			gm.VisualDelay = 100 * time.Millisecond
+			gm.AutoDelay = 1 * time.Second
+			gm.Game.SetVisualDelay(gm.VisualDelay)
+			gm.Game.EnableObserver()
+			gm.Play()
+			return
+		case "sim":
+			if len(args) != 3 {
+				fmt.Println("Invalid command. Usage: sim [spins] [amount]")
+				continue
+			}
+			spins, err1 := strconv.Atoi(args[1])
+			amount, err2 := strconv.Atoi(args[2])
+			if err1 != nil || err2 != nil {
+				fmt.Println("Invalid parameters. Ensure both spins and amount are numbers.")
+				continue
+			}
+			gm.VisualDelay = 0
+			gm.AutoDelay = 0
+			gm.Game.SetVisualDelay(gm.VisualDelay)
+			gm.Game.DisableObserver()
+			gm.RunSimulation(spins, amount)
+			return
+		default:
+			fmt.Println("Invalid command. Use 'play' or 'sim [spins] [amount]'.")
+		}
+	}
 }
 
 func (gm *GameManager) Play() {
