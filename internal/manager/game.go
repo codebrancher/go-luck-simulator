@@ -65,6 +65,9 @@ func (gm *GameManager) Start() {
 			gm.Game.DisableObserver()
 			gm.RunSimulation(spins, amount)
 			return
+		case "exit":
+			gm.Display.Show("Exiting game.")
+			return
 		default:
 			fmt.Println("Invalid command. Use 'play' or 'sim [spins] [amount]'.")
 		}
@@ -76,7 +79,7 @@ func (gm *GameManager) Play() {
 	lastValidBet := ""
 	gm.Display.ShowInfo(wildfruits.Symbols, gm.Game)
 	for {
-		gm.Display.Show("Ready? Enter command:")
+		fmt.Print("Enter command: ")
 		input, _ := inputReader.ReadString('\n')
 		input = strings.TrimSpace(input)
 
@@ -125,8 +128,10 @@ func (gm *GameManager) Play() {
 			gm.Display.ShowInfo(wildfruits.Symbols, gm.Game)
 		case "stats":
 			gm.Display.ShowStats(gm.Game)
+		case "help":
+			gm.Display.ShowHelp()
 		default:
-			gm.Display.Show("Invalid command. Please use 'info', 'stats', 'bet', 'auto', or 'exit'.")
+			gm.Display.ShowHelp()
 		}
 	}
 }

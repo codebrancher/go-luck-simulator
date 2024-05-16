@@ -31,6 +31,37 @@ func (cd *ConsoleDisplay) ShowStartupInfo() {
 	cd.printLeftAligned("play", contentWidth)
 	cd.printBlankLine()
 	cd.printLeftAligned("sim [spins] [bet]", contentWidth)
+	cd.printBlankLine()
+	cd.printLeftAligned("exit", contentWidth)
+	fmt.Println(border)
+	fmt.Println()
+}
+
+func (cd *ConsoleDisplay) ShowHelp() {
+	cd.ClearScreen()
+	frameWidth := 32
+	contentWidth := frameWidth - 2
+
+	border := strings.Repeat("=", frameWidth)
+	fmt.Println(border)
+	cd.printBlankLine()
+	cd.printCentered("Need help?", contentWidth)
+	cd.printBlankLine()
+	cd.printIntermediaryLine()
+	cd.printCentered("Commands", contentWidth)
+	cd.printIntermediaryLine()
+	cd.printBlankLine()
+	cd.printLeftAligned("bet [amount]", contentWidth)
+	cd.printBlankLine()
+	cd.printLeftAligned("auto [spins] [bet amount]", contentWidth)
+	cd.printBlankLine()
+	cd.printLeftAligned("info", contentWidth)
+	cd.printBlankLine()
+	cd.printLeftAligned("stats", contentWidth)
+	cd.printBlankLine()
+	cd.printLeftAligned("help", contentWidth)
+	cd.printBlankLine()
+	cd.printLeftAligned("exit", contentWidth)
 	fmt.Println(border)
 	fmt.Println()
 }
