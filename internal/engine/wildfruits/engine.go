@@ -15,8 +15,8 @@ type SlotMachine struct {
 	GameConfig    GameConfig
 	GameState     GameState
 	DisplayConfig DisplayConfig
-	observers     []engine.Observer
-	display       engine.Observer
+	observers     []engine.Observer[*WildFruitState]
+	display       engine.Observer[*WildFruitState]
 }
 
 type GameConfig struct {
@@ -54,7 +54,7 @@ type DisplayConfig struct {
 	WinningPositions    map[int]map[int]bool
 }
 
-func NewSlotMachine(rng randomizer.Randomizer, startingCash int, currency string, display engine.Observer) *SlotMachine {
+func NewSlotMachine(rng randomizer.Randomizer, startingCash int, currency string, display engine.Observer[*WildFruitState]) *SlotMachine {
 	// Generate the weighted symbols list once
 	weightedSymbols := generateWeightedSymbols()
 
@@ -190,7 +190,7 @@ func (s *SlotMachine) CalculateWinnings() (string, int) {
 	return winDescriptions, totalWinAmount
 }
 
-func (s *SlotMachine) RequestBet(input string) (int, error) {
+func (s *SlotMachine) RequestCommand(input string) (int, error) {
 	input = strings.TrimSpace(input)
 	var bet int
 	var err error

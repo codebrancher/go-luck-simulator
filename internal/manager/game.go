@@ -4,172 +4,57 @@ import (
 	"bufio"
 	"fmt"
 	"go-slot-machine/internal/display"
-	"go-slot-machine/internal/engine/wildfruits"
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type GameManager struct {
-	Game        *wildfruits.SlotMachine
-	Display     display.Display
-	AutoDelay   time.Duration
-	VisualDelay time.Duration
+	Display *display.StartUp
 }
 
-func NewGameManager(game *wildfruits.SlotMachine, display display.Display) *GameManager {
+func NewGameManager(display *display.StartUp) *GameManager {
 	return &GameManager{
-		Game:        game,
-		Display:     display,
-		AutoDelay:   0,
-		VisualDelay: 0,
+		Display: display,
 	}
 }
 
-func (gm *GameManager) Start() {
+func (gm *GameManager) Select() (string, string, int) {
 	reader := bufio.NewReader(os.Stdin)
 	gm.Display.ShowStartupInfo()
-	for {
-		fmt.Print("Enter command: ")
-		command, _ := reader.ReadString('\n')
-		command = strings.TrimSpace(command)
-		args := strings.Fields(command)
 
-		if len(args) == 0 {
-			continue
-		}
+	// Step 1: Choose the randomizer
+	fmt.Print("Select randomizer (number): ")
+	rng, _ := reader.ReadString('\n')
+	rng = strings.TrimSpace(rng)
+	rng = strings.ToLower(rng)
 
-		switch strings.ToLower(args[0]) {
-		case "play":
-			gm.VisualDelay = 100 * time.Millisecond
-			gm.AutoDelay = 1 * time.Second
-			gm.Game.SetVisualDelay(gm.VisualDelay)
-			gm.Game.EnableObserver()
-			gm.Play()
-			return
-		case "sim":
-			if len(args) != 3 {
-				fmt.Println("Invalid command. Usage: sim [spins] [amount]")
-				continue
-			}
-			spins, err1 := strconv.Atoi(args[1])
-			amount, err2 := strconv.Atoi(args[2])
-			if err1 != nil || err2 != nil {
-				fmt.Println("Invalid parameters. Ensure both spins and amount are numbers.")
-				continue
-			}
-			gm.VisualDelay = 0
-			gm.AutoDelay = 0
-			gm.Game.SetVisualDelay(gm.VisualDelay)
-			gm.Game.DisableObserver()
-			gm.RunSimulation(spins, amount)
-			return
-		case "exit":
-			gm.Display.Show("Exiting game.")
-			return
-		default:
-			fmt.Println("Invalid command. Use 'play' or 'sim [spins] [amount]'.")
-		}
+	// Validate game choice
+	if rng != "1" && rng != "2" && rng != "3" {
+		gm.Display.Show("Invalid randomizer choice.")
+		return "", "", 0
 	}
-}
 
-func (gm *GameManager) Play() {
-	inputReader := bufio.NewReader(os.Stdin)
-	lastValidBet := ""
-	gm.Display.ShowInfo(wildfruits.Symbols, gm.Game)
-	for {
-		fmt.Print("Enter command: ")
-		input, _ := inputReader.ReadString('\n')
-		input = strings.TrimSpace(input)
+	// Step 2: Choose the game
+	fmt.Print("Select game (number): ")
+	gameType, _ := reader.ReadString('\n')
+	gameType = strings.TrimSpace(gameType)
+	gameType = strings.ToLower(gameType)
 
-		// If input is empty and there's a last valid bet, re-use that bet
-		if input == "" && lastValidBet != "" {
-			input = lastValidBet
-		}
-
-		// Continue if still no input (no last bet available)
-		if input == "" {
-			continue
-		}
-
-		commandParts := strings.Fields(input)
-		if len(commandParts) == 0 {
-			continue
-		}
-
-		switch strings.ToLower(commandParts[0]) {
-		case "exit":
-			gm.Display.Show("Exiting game.")
-			return
-		case "auto":
-			if len(commandParts) != 3 {
-				gm.Display.Show("Invalid auto command. Usage: auto <spins> <bet amount>")
-				continue
-			}
-			spins, err1 := strconv.Atoi(commandParts[1])
-			bet, err2 := strconv.Atoi(commandParts[2])
-			if err1 != nil || err2 != nil || spins <= 0 || bet <= 0 {
-				gm.Display.Show("Invalid parameters for auto command.")
-				continue
-			}
-			gm.AutomatedPlay(spins, bet)
-		case "bet":
-			if len(commandParts) != 2 {
-				gm.Display.Show("Invalid bet command. Usage: bet <amount>")
-				continue
-			}
-			if err := gm.handleManualPlay(commandParts[1]); err != nil {
-				gm.Display.Show("Error: " + err.Error())
-			} else {
-				lastValidBet = input
-			}
-		case "info":
-			gm.Display.ShowInfo(wildfruits.Symbols, gm.Game)
-		case "stats":
-			gm.Display.ShowStats(gm.Game)
-		case "help":
-			gm.Display.ShowHelp()
-		default:
-			gm.Display.ShowHelp()
-		}
+	// Validate game choice
+	if gameType != "1" && gameType != "2" {
+		gm.Display.Show("Invalid game choice.")
+		return "", "", 0
 	}
-}
 
-func (gm *GameManager) AutomatedPlay(totalSpins int, betAmount int) {
-	betStr := strconv.Itoa(betAmount) + "\n"
-	for i := 0; i < totalSpins; i++ {
-		if _, err := gm.Game.RequestBet(betStr); err != nil {
-			gm.Display.Show("Error: " + err.Error())
-			break
-		}
-		if err := gm.Game.Spin(); err != nil {
-			gm.Display.Show("Error: " + err.Error())
-			break
-		}
-		gm.Game.DisplayResults()
-		time.Sleep(gm.AutoDelay)
+	// Step 3: Enter starting cash
+	fmt.Print("Enter starting cash: ")
+	cashInput, _ := reader.ReadString('\n')
+	startingCash, err := strconv.Atoi(strings.TrimSpace(cashInput))
+	if err != nil || startingCash < 0 {
+		gm.Display.Show("Invalid cash amount.")
+		return "", "", 0
 	}
-}
 
-func (gm *GameManager) RunSimulation(totalSpins, betAmount int) {
-	gm.Display.Show("Running simulation...")
-	gm.AutomatedPlay(totalSpins, betAmount)
-	gm.Display.ShowStats(gm.Game)
-}
-
-func (gm *GameManager) handleManualPlay(betInput string) error {
-	bet, err := gm.Game.RequestBet(betInput)
-	if err != nil {
-		return err
-	}
-	if bet == 0 && gm.Game.GameState.BonusGames == 0 {
-		gm.Display.Show("No bet placed or invalid input; please try again.")
-		return fmt.Errorf("no bet placed")
-	}
-	if err = gm.Game.Spin(); err != nil {
-		return err
-	}
-	gm.Game.DisplayResults()
-	return nil
+	return rng, gameType, startingCash
 }
