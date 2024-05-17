@@ -1,24 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"go-slot-machine/internal/display"
-	"go-slot-machine/internal/engine/wildfruits"
+	"go-slot-machine/internal/factory"
 	"go-slot-machine/internal/manager"
-	"go-slot-machine/internal/randomizer"
-	"time"
 )
 
 func main() {
 	currency := ""
-	startingCash := 250 // modify the starting cash, for simulations with 100000 spins you can set it 100000 to get more granularity
 
-	seed := uint64(time.Now().UnixNano())
-	rng := randomizer.NewXorShiftRNG(seed) // switch the randomizer for observing different outcomes
+	disp := &display.StartUp{}
+	m := manager.NewGameManager(disp)
+	rngType, gameType, startingCash := m.Select()
 
-	disp := &display.ConsoleDisplay{}
-	game := wildfruits.NewSlotMachine(rng, startingCash, currency, disp)
+	r, err := factory.NewRandomizer(rngType)
 
-	m := manager.NewGameManager(game, disp)
+	g, err := factory.NewGame(gameType, r, startingCash, currency)
+	if err != nil {
+		fmt.Println("Error creating game:", err)
+		return
+	}
 
-	m.Start()
+	g.Start()
 }

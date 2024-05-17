@@ -1,12 +1,32 @@
 package wildfruits
 
-import "go-slot-machine/internal/engine"
+import (
+	"go-slot-machine/internal/engine"
+	"time"
+)
 
-func (s *SlotMachine) RegisterObserver(o engine.Observer) {
+type WildFruitState struct {
+	Title              string
+	Cash               int
+	Wheels             [3][3]string
+	BonusSymbol        string
+	LastBet            int
+	TotalWinAmount     int
+	WinningDescription string
+	FreeGames          int
+	TopWinAmount       int
+	WinRate            float64
+	WinningPositions   map[int]map[int]bool
+	StartTime          time.Time
+	StartingCash       int
+	Currency           string
+}
+
+func (s *SlotMachine) RegisterObserver(o engine.Observer[*WildFruitState]) {
 	s.observers = append(s.observers, o)
 }
 
-func (s *SlotMachine) UnregisterObserver(o engine.Observer) {
+func (s *SlotMachine) UnregisterObserver(o engine.Observer[*WildFruitState]) {
 	for i, observer := range s.observers {
 		if observer == o {
 			s.observers = append(s.observers[:i], s.observers[i+1:]...)
@@ -16,7 +36,7 @@ func (s *SlotMachine) UnregisterObserver(o engine.Observer) {
 }
 
 func (s *SlotMachine) NotifyObservers() {
-	state := engine.DisplayState{
+	state := &WildFruitState{
 		Title:              s.Title,
 		Cash:               s.GameState.Cash,
 		Wheels:             s.GameConfig.Wheels,

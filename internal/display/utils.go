@@ -7,7 +7,7 @@ import (
 	"unicode/utf8"
 )
 
-func (cd *ConsoleDisplay) printCentered(text string, totalWidth int) {
+func printCentered(text string, totalWidth int) {
 	visibleLength := len([]rune(text))
 
 	totalPadding := totalWidth - visibleLength
@@ -22,7 +22,7 @@ func (cd *ConsoleDisplay) printCentered(text string, totalWidth int) {
 	fmt.Println(paddedText)
 }
 
-func (cd *ConsoleDisplay) printLeftAligned(label string, totalWidth int) {
+func printLeftAligned(label string, totalWidth int) {
 
 	fullMessage := fmt.Sprintf(" %s", label)
 	if len(fullMessage) > totalWidth {
@@ -32,7 +32,7 @@ func (cd *ConsoleDisplay) printLeftAligned(label string, totalWidth int) {
 	fmt.Printf("|%s%s|\n", fullMessage, strings.Repeat(" ", padding))
 }
 
-func (cd *ConsoleDisplay) printWithMiddlePadding(leftValue, rightValue string, frameWidth int) {
+func printWithMiddlePadding(leftValue, rightValue string, frameWidth int) {
 	contentWidth := frameWidth - 2
 
 	leftLength := utf8.RuneCountInString(leftValue)
@@ -57,13 +57,13 @@ func (cd *ConsoleDisplay) printWithMiddlePadding(leftValue, rightValue string, f
 	fmt.Printf("|%s%s%s|\n", leftValue, strings.Repeat(" ", padding), rightValue)
 }
 
-func (cd *ConsoleDisplay) printBlankLine() {
+func printBlankLine() {
 	frameWidth := 32               // Includes the border "|"
 	contentWidth := frameWidth - 2 // Width available for content between the borders
 	fmt.Printf("|%s|\n", strings.Repeat(" ", contentWidth))
 }
 
-func (cd *ConsoleDisplay) printIntermediaryLine() {
+func printIntermediaryLine() {
 	frameWidth := 32               // Includes the border "|"
 	contentWidth := frameWidth - 2 // Width available for content between the borders
 	fmt.Printf("|%s|\n", strings.Repeat("-", contentWidth))
@@ -84,6 +84,7 @@ func formatDuration(d time.Duration) string {
 	seconds := d / time.Second
 	d %= time.Second
 	milliseconds := d / time.Millisecond
+	d %= time.Millisecond
 	return fmt.Sprintf("%02d:%02d:%02d:%02d", hours, minutes, seconds, milliseconds)
 }
 
