@@ -31,18 +31,18 @@ func (s *SlotMachine) chooseBonusSymbol() {
 }
 
 func (s *SlotMachine) resetLockedPositions() {
-	s.GameState.LockedPositions = make(map[int]map[int]bool)
+	s.State.LockedPositions = make(map[int]map[int]bool)
 }
 
 func (s *SlotMachine) lockBonusSymbols() {
-	if s.GameState.BonusGames > 0 {
+	if s.State.BonusGames > 0 {
 		for row := 0; row < 3; row++ {
 			for col := 0; col < 3; col++ {
 				if s.GameConfig.Wheels[row][col] == s.GameConfig.BonusSymbol {
-					if s.GameState.LockedPositions[row] == nil {
-						s.GameState.LockedPositions[row] = make(map[int]bool)
+					if s.State.LockedPositions[row] == nil {
+						s.State.LockedPositions[row] = make(map[int]bool)
 					}
-					s.GameState.LockedPositions[row][col] = true
+					s.State.LockedPositions[row][col] = true
 				}
 			}
 		}
@@ -50,11 +50,11 @@ func (s *SlotMachine) lockBonusSymbols() {
 }
 
 func (s *SlotMachine) handleBonusGameInitiation() {
-	if s.GameState.BonusGames == 0 {
+	if s.State.BonusGames == 0 {
 		s.chooseBonusSymbol()
-		s.GameState.BonusGames += 7 // Start 7 free games
+		s.State.BonusGames += 7 // Start 7 free games
 		s.DisplayConfig.BonusGamesInitiated++
 	} else {
-		s.GameState.BonusGames += 2 // Extend existing free games
+		s.State.BonusGames += 2 // Extend existing free games
 	}
 }

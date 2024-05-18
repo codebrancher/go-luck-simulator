@@ -4,19 +4,20 @@ import (
 	"fmt"
 	"go-slot-machine/internal/engine"
 	"go-slot-machine/internal/randomizer"
+	"go-slot-machine/internal/utils"
 	"strconv"
 	"strings"
 	"time"
 )
 
 type SlotMachine struct {
-	Title         string
-	RNG           randomizer.Randomizer
-	GameConfig    GameConfig
-	GameState     GameState
-	DisplayConfig DisplayConfig
-	observers     []engine.Observer[*WildFruitState]
-	display       engine.Observer[*WildFruitState]
+	Title           string
+	RNG             randomizer.Randomizer
+	GameConfig      GameConfig
+	State           WildFruitsGameState
+	DisplayConfig   DisplayConfig
+	observerManager *engine.ObserverManager[*WildFruitObserverState]
+	display         engine.Observer[*WildFruitObserverState]
 }
 
 type GameConfig struct {
@@ -26,26 +27,14 @@ type GameConfig struct {
 	BonusSymbol     string
 	VisualDelay     time.Duration
 	Currency        string
+	MaxWin          int
 }
 
-type GameState struct {
-	Cash                  int
-	LastBet               int
+type WildFruitsGameState struct {
+	engine.GameState
 	BonusGames            int
 	LockedPositions       map[int]map[int]bool
 	TotalWinAmountPerSpin int
-	TotalWinAmount        int
-	TopWinAmount          int
-	TotalBetAmount        int
-	TotalBets             int
-	TotalSpins            int
-	TotalWins             int
-	WinRate               float64
-	PeakCash              int
-	MaxDrawdown           int
-	Wins                  []int
-	StartTime             time.Time
-	StartingCash          int
 }
 
 type DisplayConfig struct {
@@ -54,7 +43,7 @@ type DisplayConfig struct {
 	WinningPositions    map[int]map[int]bool
 }
 
-func NewSlotMachine(rng randomizer.Randomizer, startingCash int, currency string, display engine.Observer[*WildFruitState]) *SlotMachine {
+func NewSlotMachine(rng randomizer.Randomizer, startingAmount int, currency string, display engine.Observer[*WildFruitObserverState]) *SlotMachine {
 	// Generate the weighted symbols list once
 	weightedSymbols := generateWeightedSymbols()
 
@@ -74,30 +63,40 @@ func NewSlotMachine(rng randomizer.Randomizer, startingCash int, currency string
 			WildSymbol:      "🌟",
 			BonusSymbol:     "  ",
 			Currency:        currency,
+			MaxWin:          50, // max multiplier * winning lines
 		},
-		GameState: GameState{
-			Cash:                  startingCash,
-			LastBet:               0,
+		State: WildFruitsGameState{
+			GameState: engine.GameState{
+				Amount:         startingAmount,
+				TotalSpins:     0,
+				TotalWins:      0,
+				WinRate:        0,
+				PeakAmount:     startingAmount,
+				LastBet:        0,
+				TotalBetAmount: 0,
+				TotalBets:      0,
+				TotalWinAmount: 0,
+				TopWinAmount:   0,
+				StartTime:      time.Time{},
+				StartingAmount: startingAmount,
+				MaxDrawDown:    0,
+				Wins:           nil,
+			},
 			BonusGames:            0,
 			LockedPositions:       make(map[int]map[int]bool),
 			TotalWinAmountPerSpin: 0,
-			TopWinAmount:          0,
-			TotalSpins:            0,
-			TotalWins:             0,
-			WinRate:               0,
-			PeakCash:              startingCash,
-			StartTime:             time.Now(),
-			StartingCash:          startingCash,
 		},
 		DisplayConfig: DisplayConfig{
 			WinningPositions: winningPositions,
 		},
-		display: display,
+		display:         display,
+		observerManager: engine.NewObserverManager[*WildFruitObserverState](),
 	}
 
 	return sm
 }
 func (s *SlotMachine) Spin() error {
+	s.State.StartTime = time.Now()
 	// Reset winning positions
 	for i := range s.GameConfig.Wheels {
 		for j := range s.GameConfig.Wheels[i] {
@@ -105,24 +104,24 @@ func (s *SlotMachine) Spin() error {
 		}
 	}
 	// Deduct the bet only if there are no bonus games active
-	if s.GameState.BonusGames == 0 {
-		if s.GameState.LastBet > s.GameState.Cash {
+	if s.State.BonusGames == 0 {
+		if s.State.LastBet > s.State.Amount {
 			return fmt.Errorf("not enough cash to make this bet")
 		}
-		s.GameState.Cash -= s.GameState.LastBet
-		s.GameState.TotalBetAmount += s.GameState.LastBet
+		s.State.Amount -= s.State.LastBet
+		s.State.TotalBetAmount += s.State.LastBet
 		s.GameConfig.BonusSymbol = "  "
 	}
 
 	// Spin the wheels regardless of bonus or normal play
 	s.spinWheels()
-	s.UpdateDrawdown()
+	s.State.PeakAmount, s.State.MaxDrawDown = utils.UpdateDrawDown(s.State.Amount, s.State.PeakAmount, s.State.MaxDrawDown)
 
 	// Lock or reset positions based on bonus state
-	if s.GameState.BonusGames > 0 {
+	if s.State.BonusGames > 0 {
 		s.lockBonusSymbols()
-		s.GameState.BonusGames--
-		if s.GameState.BonusGames == 0 {
+		s.State.BonusGames--
+		if s.State.BonusGames == 0 {
 			s.resetLockedPositions()
 		}
 	} else {
@@ -142,15 +141,15 @@ func (s *SlotMachine) DisplayResults() {
 	// Display winnings or losses
 	winningDescriptions, winAmount := s.CalculateWinnings()
 	if winningDescriptions != "" {
-		s.GameState.Cash += winAmount
-		s.RecordWin(winAmount)
-		s.GameState.TotalWins++
+		s.State.Amount += winAmount
+		s.State.Wins = utils.RecordWin(winAmount, s.State.Wins)
+		s.State.TotalWins++
 	}
-	s.GameState.TotalWinAmount += winAmount
+	s.State.TotalWinAmount += winAmount
 	// Notify observers after calculating and displaying the win for this spin
 	s.DisplayConfig.WinningDescription = winningDescriptions
-	s.GameState.TotalWinAmountPerSpin = winAmount
-	s.GameState.WinRate = s.calculateWinRate()
+	s.State.TotalWinAmountPerSpin = winAmount
+	s.State.WinRate = utils.CalculateWinRate(s.State.TotalSpins, s.State.TotalWins)
 	s.NotifyObservers()
 }
 
@@ -173,7 +172,7 @@ func (s *SlotMachine) CalculateWinnings() (string, int) {
 			if mainSymbol == "" {
 				mainSymbol = s.GameConfig.WildSymbol
 			}
-			winAmount := s.GameState.LastBet * symbolPayouts[mainSymbol]
+			winAmount := s.State.LastBet * symbolPayouts[mainSymbol]
 			totalWinAmount += winAmount
 			s.markWinningPositions(i)
 			if winDescriptions != "" {
@@ -183,8 +182,8 @@ func (s *SlotMachine) CalculateWinnings() (string, int) {
 		}
 	}
 	// Update TopWinAmount if the total win amount is greater than the current TopWinAmount
-	if totalWinAmount > s.GameState.TopWinAmount {
-		s.GameState.TopWinAmount = totalWinAmount
+	if totalWinAmount > s.State.TopWinAmount {
+		s.State.TopWinAmount = totalWinAmount
 	}
 
 	return winDescriptions, totalWinAmount
@@ -195,30 +194,30 @@ func (s *SlotMachine) RequestCommand(input string) (int, error) {
 	var bet int
 	var err error
 
-	if s.GameState.BonusGames > 0 {
+	if s.State.BonusGames > 0 {
 		return 0, nil
 	}
 
 	if input == "" {
-		if s.GameState.LastBet == 0 || s.GameState.LastBet > s.GameState.Cash {
+		if s.State.LastBet == 0 || s.State.LastBet > s.State.Amount {
 			return 0, fmt.Errorf("invalid re-bet amount")
 		}
-		bet = s.GameState.LastBet
+		bet = s.State.LastBet
 	} else {
 		bet, err = strconv.Atoi(input)
-		if err != nil || bet < 0 || bet > s.GameState.Cash {
+		if err != nil || bet < 0 || bet > s.State.Amount {
 			return 0, fmt.Errorf("invalid bet")
 		}
 	}
 
-	s.GameState.LastBet = bet
-	s.GameState.TotalBets++
+	s.State.LastBet = bet
+	s.State.TotalBets++
 
 	return bet, nil
 }
 
 func (s *SlotMachine) spinWheels() {
-	s.GameState.TotalSpins++
+	s.State.TotalSpins++
 	for col := 0; col < 3; col++ {
 		s.spinColumn(col)
 	}
@@ -241,7 +240,7 @@ func (s *SlotMachine) updateColumnSymbols(col int) {
 }
 
 func (s *SlotMachine) isLocked(row, col int) bool {
-	locked, ok := s.GameState.LockedPositions[row][col]
+	locked, ok := s.State.LockedPositions[row][col]
 	return ok && locked
 }
 

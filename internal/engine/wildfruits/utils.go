@@ -1,49 +1,9 @@
 package wildfruits
 
 import (
-	"math"
 	"math/rand"
 	"time"
 )
-
-func (s *SlotMachine) calculateWinRate() float64 {
-	if s.GameState.TotalSpins == 0 {
-		return 0
-	}
-	return (float64(s.GameState.TotalWins) / float64(s.GameState.TotalSpins)) * 100
-}
-
-func (s *SlotMachine) UpdateDrawdown() {
-	if s.GameState.Cash > s.GameState.PeakCash {
-		s.GameState.PeakCash = s.GameState.Cash
-	} else {
-		currentDrawdown := s.GameState.PeakCash - s.GameState.Cash
-		if currentDrawdown > s.GameState.MaxDrawdown {
-			s.GameState.MaxDrawdown = currentDrawdown
-		}
-	}
-}
-
-func (s *SlotMachine) CalculateWinDeviation() float64 {
-	if len(s.GameState.Wins) == 0 {
-		return 0.0
-	}
-	mean, variance := 0.0, 0.0
-	for _, win := range s.GameState.Wins {
-		mean += float64(win)
-	}
-	mean /= float64(len(s.GameState.Wins))
-
-	for _, win := range s.GameState.Wins {
-		variance += math.Pow(float64(win)-mean, 2)
-	}
-	variance /= float64(len(s.GameState.Wins))
-	return math.Sqrt(variance)
-}
-
-func (s *SlotMachine) RecordWin(winAmount int) {
-	s.GameState.Wins = append(s.GameState.Wins, winAmount)
-}
 
 func isWinningLine(line [3]string) bool {
 	uniqueSymbols := make(map[string]bool)
@@ -110,4 +70,26 @@ func (s *SlotMachine) markWinningPositions(lineIndex int) {
 
 func (s *SlotMachine) SetVisualDelay(delay time.Duration) {
 	s.GameConfig.VisualDelay = delay
+}
+
+func (s *SlotMachine) countWildSymbols() int {
+	wildCount := 0
+	for _, row := range s.GameConfig.Wheels {
+		for _, symbol := range row {
+			if symbol == s.GameConfig.WildSymbol {
+				wildCount++
+			}
+		}
+	}
+	return wildCount
+}
+
+func generateWeightedSymbols() []string {
+	var weightedSymbols []string
+	for _, sym := range Symbols {
+		for i := 0; i < sym.Frequency; i++ {
+			weightedSymbols = append(weightedSymbols, sym.Representation)
+		}
+	}
+	return weightedSymbols
 }

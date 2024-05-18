@@ -1,63 +1,40 @@
 package peakpursuit
 
-import (
-	"go-slot-machine/internal/engine"
-)
-
-type PeakPursuitState struct {
-	Title                    string
-	Cash                     int
-	LastBet                  int
+type PeakPursuitObserverState struct {
+	Title string
+	PeakPursuitGameState
 	WinningDescription       string
 	Currency                 string
 	SpinSymbolRepresentation string
 	Winnings                 int
 	SymbolLevels             map[string]SymbolState
 	Symbols                  []Symbol
-	TotalBetAmount           int
-	TotalWinAmount           int
 	LongestSpinStreak        int
 	MaxLevelReached          int
-}
-
-func (s *SlotMachine) RegisterObserver(o engine.Observer[*PeakPursuitState]) {
-	s.observers = append(s.observers, o)
-}
-
-func (s *SlotMachine) UnregisterObserver(o engine.Observer[*PeakPursuitState]) {
-	for i, observer := range s.observers {
-		if observer == o {
-			s.observers = append(s.observers[:i], s.observers[i+1:]...)
-			break
-		}
-	}
+	InstantWinCounter        map[string]int
 }
 
 func (s *SlotMachine) NotifyObservers() {
-	state := &PeakPursuitState{
+	state := &PeakPursuitObserverState{
 		Title:                    s.Title,
-		Cash:                     s.GameState.Cash,
-		LastBet:                  s.GameState.LastBet,
+		PeakPursuitGameState:     s.State,
 		WinningDescription:       s.DisplayConfig.WinningDescription,
 		Currency:                 s.GameConfig.Currency,
 		SpinSymbolRepresentation: s.GameConfig.SpinSymbolRepresentation,
-		Winnings:                 s.GameState.Winnings,
-		SymbolLevels:             s.GameState.SymbolLevels,
+		Winnings:                 s.State.Winnings,
+		SymbolLevels:             s.State.SymbolLevels,
 		Symbols:                  s.GameConfig.Symbols,
-		TotalBetAmount:           s.GameState.TotalBetAmount,
-		TotalWinAmount:           s.GameState.TotalWinAmount,
-		LongestSpinStreak:        s.GameState.LongestSpinStreak,
-		MaxLevelReached:          s.GameState.MaxLevelReached,
+		LongestSpinStreak:        s.State.LongestSpinStreak,
+		MaxLevelReached:          s.State.MaxLevelReached,
+		InstantWinCounter:        s.State.InstantWinCounter,
 	}
-	for _, observer := range s.observers {
-		observer.Update(state)
-	}
+	s.observerManager.NotifyObservers(state)
 }
 
 func (s *SlotMachine) EnableObserver() {
-	s.RegisterObserver(s.display)
+	s.observerManager.RegisterObserver(s.display)
 }
 
 func (s *SlotMachine) DisableObserver() {
-	s.UnregisterObserver(s.display)
+	s.observerManager.UnregisterObserver(s.display)
 }

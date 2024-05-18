@@ -2,6 +2,7 @@ package display
 
 import (
 	"fmt"
+	"go-slot-machine/internal/utils"
 	"strings"
 )
 
@@ -18,24 +19,24 @@ func (su *StartUp) ShowStartupInfo() {
 
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
-	printBlankLine()
-	printBlankLine()
-	printCentered("\033[39;1mThe Go Slot Machine!\033[0m", contentWidth+11)
-	printBlankLine()
-	printBlankLine()
-	printIntermediaryLine()
-	printCentered("🎲 Randomizer 🎲", contentWidth-2)
-	printIntermediaryLine()
-	printBlankLine()
-	printLeftAligned("1. Default", contentWidth)
-	printLeftAligned("2. LCG", contentWidth)
-	printLeftAligned("3. XorShift*", contentWidth)
-	printIntermediaryLine()
-	printCentered("🕹️  Games 🕹️", contentWidth+2)
-	printIntermediaryLine()
-	printBlankLine()
-	printLeftAligned("1. WildFruits", contentWidth)
-	printLeftAligned("2. PeakPursuit", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintCentered("\033[39;1mThe Go Slot Machine!\033[0m", contentWidth+11)
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintIntermediaryLine()
+	utils.PrintCentered("🎲 Randomizer 🎲", contentWidth-2)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("1. Default", contentWidth)
+	utils.PrintLeftAligned("2. LCG", contentWidth)
+	utils.PrintLeftAligned("3. XorShift*", contentWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintCentered("🕹️  Games 🕹️", contentWidth+2)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("1. WildFruits", contentWidth)
+	utils.PrintLeftAligned("2. PeakPursuit", contentWidth)
 
 	fmt.Println(border)
 	fmt.Println()

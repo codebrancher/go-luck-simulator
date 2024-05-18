@@ -163,7 +163,7 @@ func (gm *WildFruitsManager) handleManualPlay(betInput string) error {
 	if err != nil {
 		return err
 	}
-	if bet == 0 && gm.Game.GameState.BonusGames == 0 {
+	if bet == 0 && gm.Game.State.BonusGames == 0 {
 		gm.Display.Show("No bet placed or invalid input; please try again.")
 		return fmt.Errorf("no bet placed")
 	}
