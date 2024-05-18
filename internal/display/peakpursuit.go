@@ -22,21 +22,21 @@ func (cd *PeakPursuitDisplay) ShowStartupInfo(title string) {
 
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
-	printBlankLine()
-	printBlankLine()
-	printCentered(title, contentWidth-2)
-	printBlankLine()
-	printBlankLine()
-	printIntermediaryLine()
-	printCentered("Commands", contentWidth)
-	printIntermediaryLine()
-	printBlankLine()
-	printLeftAligned("play", contentWidth)
-	printBlankLine()
-	printLeftAligned("sim [spins] [bet amount]", contentWidth)
-	printBlankLine()
-	printBlankLine()
-	printLeftAligned("exit", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintCentered(title, contentWidth-2)
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintIntermediaryLine()
+	utils.PrintCentered("Commands", contentWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("play", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("sim [spins] [bet amount]", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("exit", contentWidth)
 	fmt.Println(border)
 	fmt.Println()
 }
@@ -48,25 +48,25 @@ func (cd *PeakPursuitDisplay) ShowHelp() {
 
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
-	printBlankLine()
-	printCentered("Need help?", contentWidth)
-	printBlankLine()
-	printIntermediaryLine()
-	printCentered("Commands", contentWidth)
-	printIntermediaryLine()
-	printBlankLine()
-	printLeftAligned("cashout", contentWidth)
-	printBlankLine()
-	printLeftAligned("bet [amount]", contentWidth)
-	printBlankLine()
-	printBlankLine()
-	printLeftAligned("info", contentWidth)
-	printBlankLine()
-	printLeftAligned("stats", contentWidth)
-	printBlankLine()
-	printLeftAligned("help", contentWidth)
-	printBlankLine()
-	printLeftAligned("exit", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintCentered("Need help?", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintIntermediaryLine()
+	utils.PrintCentered("Commands", contentWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("cashout", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("bet [amount]", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("info", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("stats", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("help", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintLeftAligned("exit", contentWidth)
 	fmt.Println(border)
 	fmt.Println()
 }
@@ -75,32 +75,32 @@ func (cd *PeakPursuitDisplay) ClearScreen() {
 	fmt.Print("\033[H\033[2J")
 }
 
-func (cd *PeakPursuitDisplay) Update(state *peakpursuit.PeakPursuitState) {
+func (cd *PeakPursuitDisplay) Update(state *peakpursuit.PeakPursuitObserverState) {
 	cd.ClearScreen()
 
-	frameWidth := 32               // Width includes the border "|"
-	contentWidth := frameWidth - 2 // Width available for content between the borders
+	frameWidth := 32
+	contentWidth := frameWidth - 2
 	contentWidthUnicode := frameWidth - 4
 
 	rtp := float64(state.TotalWinAmount) / float64(state.TotalBetAmount) * 100
 
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
-	printBlankLine()
-	printBlankLine()
-	printCentered(state.Title, contentWidthUnicode)
-	printBlankLine()
-	printBlankLine()
-	printIntermediaryLine()
-	printCentered("Pot", contentWidth)
-	printIntermediaryLine()
-	printBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintCentered(state.Title, contentWidthUnicode)
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintIntermediaryLine()
+	utils.PrintCentered("Pot", contentWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
 	if state.Winnings > 0 {
-		printCentered("\033[48;5;22m      "+strconv.Itoa(state.Winnings)+"      \033[0m", contentWidth+14)
+		utils.PrintCentered("\033[48;5;22m      "+strconv.Itoa(state.Winnings)+"      \033[0m", contentWidth+14)
 	} else {
-		printCentered(strconv.Itoa(state.Winnings), contentWidth)
+		utils.PrintCentered(strconv.Itoa(state.Winnings), contentWidth)
 	}
-	printBlankLine()
+	utils.PrintBlankLine()
 
 	maxLevels := 0
 	for _, symbol := range state.Symbols {
@@ -120,20 +120,17 @@ func (cd *PeakPursuitDisplay) Update(state *peakpursuit.PeakPursuitState) {
 
 			for level := 1; level <= maxLevels; level++ {
 				multiplier := fmt.Sprintf(" %3dx ", symbol.Payouts[level-1])
-				bgStart := "\033[32m" // Green with blink
+				bgStart := "\033[32m"
 				bgEnd := "\033[0m"
-				normalGreen := "\033[33m"  // Green without blink
-				normalYellow := "\033[39m" // Yellow
+				normalGreen := "\033[33m"
+				normalYellow := "\033[39m"
 
 				// Apply color based on the level and max reached condition
 				if stateSymbol.MaxReached {
-					// Blink all levels with green background when max level is reached
 					multiplier = bgStart + multiplier + bgEnd
 				} else if level <= stateSymbol.CurrentLevel {
-					// Green without blink up to the current level
 					multiplier = normalGreen + multiplier + bgEnd
 				} else {
-					// Yellow for levels above the current one
 					multiplier = normalYellow + multiplier + bgEnd
 				}
 
@@ -148,28 +145,28 @@ func (cd *PeakPursuitDisplay) Update(state *peakpursuit.PeakPursuitState) {
 		fmt.Printf("|    %s     |\n", levelDisplays[j])
 
 	}
-	printBlankLine()
+	utils.PrintBlankLine()
 	fmt.Printf("|       %s       |\n", strings.Join(symbolDisplays, "     "))
-	printBlankLine()
-	printIntermediaryLine()
-	printCentered("------", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintIntermediaryLine()
+	utils.PrintCentered("------", contentWidth)
 	fmt.Printf("|            | %s |            |\n", state.SpinSymbolRepresentation)
-	printCentered("------", contentWidth)
+	utils.PrintCentered("------", contentWidth)
 	// Displaying winning descriptions
 	if state.WinningDescription != "" {
-		printIntermediaryLine()
+		utils.PrintIntermediaryLine()
 		for _, line := range strings.Split(state.WinningDescription, "\n") {
-			printCentered(line, contentWidth-2)
+			utils.PrintCentered(line, contentWidth-2)
 		}
 	}
-	printIntermediaryLine()
-	printBlankLine()
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
 	leftValLine1 := fmt.Sprintf(" Bet: %d%s", state.LastBet, state.Currency)
 	rightValLine1 := fmt.Sprintf("RTP: %.1f%% ", rtp)
-	printWithMiddlePadding(leftValLine1, rightValLine1, contentWidth+2)
-	leftValLine2 := fmt.Sprintf(" Cash: %d%s", state.Cash, state.Currency)
-	printWithMiddlePadding(leftValLine2, "", contentWidth+2)
-	printBlankLine()
+	utils.PrintWithMiddlePadding(leftValLine1, rightValLine1, contentWidth+2)
+	leftValLine2 := fmt.Sprintf(" Cash: %d%s", state.Amount, state.Currency)
+	utils.PrintWithMiddlePadding(leftValLine2, "", contentWidth+2)
+	utils.PrintBlankLine()
 	fmt.Println(border)
 	fmt.Println()
 }
@@ -183,23 +180,22 @@ func (cd *PeakPursuitDisplay) ShowInfo(symbols []peakpursuit.Symbol, game *peakp
 
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
-	printBlankLine()
-	printBlankLine()
-	printCentered(game.Title, contentWidthUnicode)
-	printBlankLine()
-	printBlankLine()
-	printIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintCentered(game.Title, contentWidthUnicode)
+	utils.PrintBlankLine()
+	utils.PrintBlankLine()
+	utils.PrintIntermediaryLine()
 
 	// Explanation of Wild Symbol and Bonus Games
 	resetSymbolDescription := fmt.Sprintf("%s resets game state", game.GameConfig.ResetSymbolRepresentation)
 	wildSymbolDescription := fmt.Sprintf("%s increases every symbol", game.GameConfig.WildSymbolRepresentation)
-	printCentered("Features", contentWidth)
-	printIntermediaryLine()
-	printCentered(resetSymbolDescription, contentWidth-1)
-	printCentered(wildSymbolDescription, contentWidth-1)
-
-	printIntermediaryLine()
-	printBlankLine()
+	utils.PrintCentered("Features", contentWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintCentered(resetSymbolDescription, contentWidth-1)
+	utils.PrintCentered(wildSymbolDescription, contentWidth-1)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
 	levelDisplays, symbolDisplays := cd.prepareSymbolDisplays(symbols, game)
 
 	// Print each level from highest to lowest (to appear as a rising barometer)
@@ -207,20 +203,20 @@ func (cd *PeakPursuitDisplay) ShowInfo(symbols []peakpursuit.Symbol, game *peakp
 		fmt.Printf("|    %s     |\n", levelDisplays[j])
 
 	}
-	printBlankLine()
+	utils.PrintBlankLine()
 	fmt.Printf("|       %s       |\n", strings.Join(symbolDisplays, "     "))
-	printBlankLine()
+	utils.PrintBlankLine()
 
-	printIntermediaryLine()
-	printCentered("Commands", contentWidth)
-	printIntermediaryLine()
-	printLeftAligned("cashout", contentWidth)
-	printLeftAligned("bet [amount]", contentWidth)
-	printLeftAligned("help", contentWidth)
-	printIntermediaryLine()
-	printBlankLine()
-	printCentered(fmt.Sprintf("Your cash: %d%s", game.GameState.Cash, game.GameConfig.Currency), contentWidth)
-	printBlankLine()
+	utils.PrintIntermediaryLine()
+	utils.PrintCentered("Commands", contentWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintLeftAligned("cashout", contentWidth)
+	utils.PrintLeftAligned("bet [amount]", contentWidth)
+	utils.PrintLeftAligned("help", contentWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintCentered(fmt.Sprintf("Your cash: %d%s", game.State.Amount, game.GameConfig.Currency), contentWidth)
+	utils.PrintBlankLine()
 	fmt.Println(border)
 	fmt.Println()
 }
@@ -230,43 +226,46 @@ func (cd *PeakPursuitDisplay) ShowStats(game *peakpursuit.SlotMachine) {
 	frameWidth := 32
 	contentWidth := frameWidth - 2
 
-	rtp := utils.CalculateRTP(game.GameState.TotalWinAmount, game.GameState.TotalBetAmount)
-	profitability := utils.CalculateProfitability(game.GameState.Cash, game.GameState.StartingCash)
-	avgBetAmount := utils.CalculateAverageBet(game.GameState.TotalBetAmount, game.GameState.TotalBets)
-	avgPayout := utils.CalculateAveragePayout(game.GameState.TotalWinAmount, game.GameState.TotalWins)
-	deviation := utils.CalculateWinDeviation(game.GameState.Wins)
+	rtp := utils.CalculateRTP(game.State.TotalWinAmount, game.State.TotalBetAmount)
+	profitability := utils.CalculateProfitability(game.State.Amount, game.State.StartingAmount)
+	avgBetAmount := utils.CalculateAverageBet(game.State.TotalBetAmount, game.State.TotalBets)
+	avgPayout := utils.CalculateAveragePayout(game.State.TotalWinAmount, game.State.TotalWins)
+	deviation := utils.CalculateWinDeviation(game.State.Wins)
 
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
-	printBlankLine()
-	printCentered("Who doesn't like stats?", contentWidth)
-	printBlankLine()
-	printIntermediaryLine()
-	printBlankLine()
-	printWithMiddlePadding(" RTP", fmt.Sprintf("%.2f%% ", rtp), frameWidth)
-	printWithMiddlePadding(" Win rate", fmt.Sprintf("%.2f%% ", game.GameState.WinRate), frameWidth)
-	printWithMiddlePadding(" Playtime", fmt.Sprintf("%s ", formatDuration(time.Since(game.GameState.StartTime))), frameWidth)
-	printIntermediaryLine()
-	printBlankLine()
-	printWithMiddlePadding(" Total spins", fmt.Sprintf("%d ", game.GameState.TotalSpins), frameWidth)
-	printWithMiddlePadding(" Total wins", fmt.Sprintf("%d ", game.GameState.TotalWins), frameWidth)
-	printIntermediaryLine()
-	printBlankLine()
-	printWithMiddlePadding(" Starting cash", fmt.Sprintf("%d%s ", game.GameState.StartingCash, game.GameConfig.Currency), frameWidth)
-	printWithMiddlePadding(" Current cash", fmt.Sprintf("%d%s ", game.GameState.Cash, game.GameConfig.Currency), frameWidth)
-	printWithMiddlePadding(" Total win amount", fmt.Sprintf("%d%s ", game.GameState.TotalWinAmount, game.GameConfig.Currency), frameWidth)
-	printWithMiddlePadding(" Total bet amount", fmt.Sprintf("%d%s ", game.GameState.TotalBetAmount, game.GameConfig.Currency), frameWidth)
-	printWithMiddlePadding(" Max drawdown", fmt.Sprintf("%d%s ", game.GameState.MaxDrawdown, game.GameConfig.Currency), frameWidth)
-	printWithMiddlePadding(" Net profit/loss", fmt.Sprintf("%d ", profitability), frameWidth)
-	printWithMiddlePadding(" Average bet", fmt.Sprintf("%.2f%s ", avgBetAmount, game.GameConfig.Currency), frameWidth)
-	printWithMiddlePadding(" Average win", fmt.Sprintf("%.2f%s ", avgPayout, game.GameConfig.Currency), frameWidth)
-	printWithMiddlePadding(" Volatility", fmt.Sprintf("%.2f ", deviation), frameWidth)
-	printWithMiddlePadding(" Top win", fmt.Sprintf("%d%s ", game.GameState.TopWinAmount, game.GameConfig.Currency), frameWidth)
-	printIntermediaryLine()
-	printBlankLine()
-	printWithMiddlePadding(" Best Spin Streak", fmt.Sprintf("%d ", game.GameState.LongestSpinStreak), frameWidth)
-	printWithMiddlePadding(" Max Level Reached", fmt.Sprintf("%d ", game.GameState.MaxLevelReached), frameWidth)
-	printWithMiddlePadding(" Best Max Level Streak", fmt.Sprintf("%d ", game.GameState.LongestMaxLevelStreak), frameWidth)
+	utils.PrintBlankLine()
+	utils.PrintCentered("Who doesn't like stats?", contentWidth)
+	utils.PrintBlankLine()
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintWithMiddlePadding(" RTP", fmt.Sprintf("%.2f%% ", rtp), frameWidth)
+	utils.PrintWithMiddlePadding(" Win rate", fmt.Sprintf("%.2f%% ", game.State.WinRate), frameWidth)
+	utils.PrintWithMiddlePadding(" Playtime", fmt.Sprintf("%s ", utils.FormatDuration(time.Since(game.State.StartTime))), frameWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintWithMiddlePadding(" Total spins", fmt.Sprintf("%d ", game.State.TotalSpins), frameWidth)
+	utils.PrintWithMiddlePadding(" Total wins", fmt.Sprintf("%d ", game.State.TotalWins), frameWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintWithMiddlePadding(" Starting cash", fmt.Sprintf("%d%s ", game.State.StartingAmount, game.GameConfig.Currency), frameWidth)
+	utils.PrintWithMiddlePadding(" Current cash", fmt.Sprintf("%d%s ", game.State.Amount, game.GameConfig.Currency), frameWidth)
+	utils.PrintWithMiddlePadding(" Total win amount", fmt.Sprintf("%d%s ", game.State.TotalWinAmount, game.GameConfig.Currency), frameWidth)
+	utils.PrintWithMiddlePadding(" Total bet amount", fmt.Sprintf("%d%s ", game.State.TotalBetAmount, game.GameConfig.Currency), frameWidth)
+	utils.PrintWithMiddlePadding(" Max drawdown", fmt.Sprintf("%d%s ", game.State.MaxDrawDown, game.GameConfig.Currency), frameWidth)
+	utils.PrintWithMiddlePadding(" Net profit/loss", fmt.Sprintf("%d ", profitability), frameWidth)
+	utils.PrintWithMiddlePadding(" Average bet", fmt.Sprintf("%.2f%s ", avgBetAmount, game.GameConfig.Currency), frameWidth)
+	utils.PrintWithMiddlePadding(" Average win", fmt.Sprintf("%.2f%s ", avgPayout, game.GameConfig.Currency), frameWidth)
+	utils.PrintWithMiddlePadding(" Volatility", fmt.Sprintf("%.2f ", deviation), frameWidth)
+	utils.PrintWithMiddlePadding(" Top win", fmt.Sprintf("%d%s ", game.State.TopWinAmount, game.GameConfig.Currency), frameWidth)
+	utils.PrintIntermediaryLine()
+	utils.PrintBlankLine()
+	utils.PrintWithMiddlePadding(" Best Spin Streak", fmt.Sprintf("%d ", game.State.LongestSpinStreak), frameWidth)
+	utils.PrintWithMiddlePadding(" Max Level Reached", fmt.Sprintf("%d ", game.State.MaxLevelReached), frameWidth)
+	utils.PrintWithMiddlePadding(" Best Max Level Streak", fmt.Sprintf("%d ", game.State.LongestMaxLevelStreak), frameWidth)
+	for s, c := range game.State.InstantWinCounter {
+		utils.PrintWithMiddlePadding(fmt.Sprintf(" Instant payouts %s", s), fmt.Sprintf("%d ", c), frameWidth-1)
+	}
 	fmt.Println(border)
 	fmt.Println()
 }
@@ -286,25 +285,22 @@ func (cd *PeakPursuitDisplay) prepareSymbolDisplays(symbols []peakpursuit.Symbol
 	i := 0
 	for _, symbol := range symbols {
 		if len(symbol.Payouts) > 1 { // Only display symbols with levels
-			stateSymbol := game.GameState.SymbolLevels[symbol.Representation]
-			symbolDisplays[i] = symbol.Representation // Prepare symbol display line
+			stateSymbol := game.State.SymbolLevels[symbol.Representation]
+			symbolDisplays[i] = symbol.Representation
 
 			for level := 1; level <= maxLevels; level++ {
 				multiplier := fmt.Sprintf(" %3dx ", symbol.Payouts[level-1])
-				bgStart := "\033[32m" // Green with blink
+				bgStart := "\033[32m"
 				bgEnd := "\033[0m"
-				normalGreen := "\033[33m"  // Green without blink
-				normalYellow := "\033[39m" // Yellow
+				normalGreen := "\033[33m"
+				normalYellow := "\033[39m"
 
 				// Apply color based on the level and max reached condition
 				if stateSymbol.MaxReached {
-					// Blink all levels with green background when max level is reached
 					multiplier = bgStart + multiplier + bgEnd
 				} else if level <= stateSymbol.CurrentLevel {
-					// Green without blink up to the current level
 					multiplier = normalGreen + multiplier + bgEnd
 				} else {
-					// Yellow for levels above the current one
 					multiplier = normalYellow + multiplier + bgEnd
 				}
 
