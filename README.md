@@ -8,8 +8,8 @@
 
 
 ## Table of Contents
-- [Getting Started](#getting-started)
 - [Features](#features)
+- [Getting Started](#getting-started)
 - [Usage](#usage)
 - [Games](#games)
 - [Customization](#customization)
@@ -17,7 +17,6 @@
 - [License](#license)
 
 ## Features
-
 
 - **Advanced Randomization**:  Choose from several randomizers, including the standard RNG, LCG, and XorShift, to ensure game fairness and complexity.
 - **Interactive Commands**: Utilize commands such as bet, auto, and stats for real-time game management and engagement.
