@@ -3,7 +3,7 @@ package manager
 import (
 	"bufio"
 	"fmt"
-	"go-slot-machine/internal/display"
+	"go-luck-simulator/internal/display"
 	"os"
 	"strconv"
 	"strings"

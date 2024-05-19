@@ -2,7 +2,7 @@ package peakpursuit
 
 import (
 	"fmt"
-	"go-slot-machine/internal/utils"
+	"go-luck-simulator/internal/utils"
 	"time"
 )
 

@@ -2,7 +2,7 @@ package factory
 
 import (
 	"fmt"
-	"go-slot-machine/internal/randomizer"
+	"go-luck-simulator/internal/randomizer"
 	"time"
 )
 

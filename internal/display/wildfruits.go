@@ -2,8 +2,8 @@ package display
 
 import (
 	"fmt"
-	"go-slot-machine/internal/engine/wildfruits"
-	"go-slot-machine/internal/utils"
+	"go-luck-simulator/internal/engine/wildfruits"
+	"go-luck-simulator/internal/utils"
 	"strings"
 	"time"
 )
