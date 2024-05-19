@@ -29,22 +29,23 @@ func (s *SlotMachine) isSpecialSymbol(symbol string) bool {
 func (s *SlotMachine) processSymbolLevelIncrease(symbolKey string) {
 	state, exists := s.State.SymbolLevels[symbolKey]
 	if !exists {
-		return // Exit if the symbol key does not exist in the map
+		return
 	}
-
 	if state.CurrentLevel >= s.GameConfig.MaxLevel {
-		state.MaxReached = true
 		s.State.CurrentMaxLevelStreak++
 		s.State.MaxLevelReached++
 		s.processPayouts(symbolKey, state)
-	} else {
-		state.CurrentLevel++
-		symbol, e := findSymbol(symbolKey)
-		if e && len(symbol.Payouts) > state.CurrentLevel-1 {
-			s.processPayouts(symbolKey, state)
-		}
+		return
 	}
-	s.State.SymbolLevels[symbolKey] = state // Update the map outside the conditions
+
+	state.CurrentLevel++
+	s.State.SymbolLevels[symbolKey] = state
+
+	symbol, e := findSymbol(symbolKey)
+	if !e || len(symbol.Payouts) <= state.CurrentLevel-1 {
+		return
+	}
+	s.processPayouts(symbolKey, state)
 }
 
 // processPayouts calculates and applies payouts based on the symbol level and bet.
@@ -59,12 +60,13 @@ func (s *SlotMachine) processPayouts(symbolKey string, state SymbolState) {
 
 	// Check if the symbol has reached the maximum level
 	if state.CurrentLevel == s.GameConfig.MaxLevel {
-		if state.MaxReached {
+		if state.MaxAlreadyReached {
 			// If max level was already reached, handle instant payout
 			s.State.InstantWinCounter[symbolKey]++
 			s.applyPayout(symbolKey, payout, true) // Instant payout
 		} else {
 			// First time reaching max level, mark as reached and add to pot
+			state.MaxAlreadyReached = true
 			s.State.SymbolLevels[symbolKey] = state
 			s.applyPayout(symbolKey, payout, false) // Add to pot
 		}

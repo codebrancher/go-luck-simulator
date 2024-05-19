@@ -48,8 +48,8 @@ type DisplayConfig struct {
 }
 
 type SymbolState struct {
-	CurrentLevel int
-	MaxReached   bool
+	CurrentLevel      int
+	MaxAlreadyReached bool
 }
 
 // NewSlotMachine creates a new instance of SlotMachine with given configurations.
@@ -95,8 +95,8 @@ func NewSlotMachine(rng randomizer.Randomizer, startingAmount int, currency stri
 	// Initialize symbol levels for each symbol in the config
 	for _, symbol := range weightedSymbols {
 		slotMachine.State.SymbolLevels[symbol] = SymbolState{
-			CurrentLevel: 0,
-			MaxReached:   false,
+			CurrentLevel:      0,
+			MaxAlreadyReached: false,
 		}
 	}
 

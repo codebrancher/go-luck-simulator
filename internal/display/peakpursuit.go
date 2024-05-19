@@ -126,7 +126,7 @@ func (cd *PeakPursuitDisplay) Update(state *peakpursuit.PeakPursuitObserverState
 				normalYellow := "\033[39m"
 
 				// Apply color based on the level and max reached condition
-				if stateSymbol.MaxReached {
+				if stateSymbol.MaxAlreadyReached {
 					multiplier = bgStart + multiplier + bgEnd
 				} else if level <= stateSymbol.CurrentLevel {
 					multiplier = normalGreen + multiplier + bgEnd
@@ -296,7 +296,7 @@ func (cd *PeakPursuitDisplay) prepareSymbolDisplays(symbols []peakpursuit.Symbol
 				normalYellow := "\033[39m"
 
 				// Apply color based on the level and max reached condition
-				if stateSymbol.MaxReached {
+				if stateSymbol.MaxAlreadyReached {
 					multiplier = bgStart + multiplier + bgEnd
 				} else if level <= stateSymbol.CurrentLevel {
 					multiplier = normalGreen + multiplier + bgEnd
