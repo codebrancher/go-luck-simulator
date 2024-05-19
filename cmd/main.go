@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"go-slot-machine/internal/display"
-	"go-slot-machine/internal/factory"
-	"go-slot-machine/internal/manager"
+	"go-luck-simulator/internal/display"
+	"go-luck-simulator/internal/factory"
+	"go-luck-simulator/internal/manager"
 )
 
 func main() {
