@@ -1,12 +1,7 @@
-![Title](./screenshots/wf_game_title.png)
+# GoLuckSimulator
 
-## Description
 
-**The Go Slot Machine** is an open-source, interactive simulation crafted in Go, aimed at demystifying the core mechanics behind slot machines. You can play interactive or simulate high loads of spins to gain insights in game dynamics and statistics.
-
-Designed with modularity in mind, the software allows you to experiment with different components such as random number generators (RNGs) and payout algorithms. Select the randomizer algorithm at the beginning, you can also write own algorithms and easily integrate them.
-
-The goal is to enhance the program by different games, randomness implementations and more statistical methods in a modular way.
+**GoLuckSimulator** is a modular, dynamic testing environment written in Go, designed to simulate and analyze probability-based games and scenarios. Whether you're looking to test randomness, understand probabilities, or simply experiment with game outcomes, GoLuckSimulator offers a robust platform for exploring the mechanics of luck.
 
 ## Disclaimer
 **Educational Purposes Only**: This project is intended strictly for educational purposes and is not to be used for gambling, betting, or any form of real money play.  It is not a guide for gambling or an endorsement of gambling and should not be used as such.
@@ -14,22 +9,21 @@ The goal is to enhance the program by different games, randomness implementation
 
 ## Table of Contents
 - [Getting Started](#getting-started)
+- [Features](#features)
 - [Usage](#usage)
 - [Games](#games)
-- [Features](#features)
 - [Customization](#customization)
 - [Contributing](#contributing)
 - [License](#license)
-- [Contact](#contact)
 
 ## Features
 
-### General Features
 
 - **Advanced Randomization**:  Choose from several randomizers, including the standard RNG, LCG, and XorShift, to ensure game fairness and complexity.
 - **Interactive Commands**: Utilize commands such as bet, auto, and stats for real-time game management and engagement.
 - **Simulation Mode**: Toggle between interactive gameplay and simulation mode to conduct extensive tests or enjoy casual play.
 - **Detailed Stats**: Gain detailed insights into randomization processes and game strategies.
+- **Modularity**: The program is designed with modularity in mind to allow easy integration of new RNGs, Games and more.
 
 ## Getting Started
 
@@ -43,25 +37,25 @@ The goal is to enhance the program by different games, randomness implementation
 1. Clone the repository to your local machine:
 
 ```sh
-git clone https://github.com/codebrancher/go-slot-machine.git
-cd go-slot-machine/cmd
+git clone https://github.com/codebrancher/go-luck-simulator.git
+cd go-luck-simulator/cmd
 ```
 
 2. Build the project:
 
 ```sh
-go build -o slotmachine .
+go build -o lucksimulator .
 ```
 
 ## Usage
 
-Run the Go Slot Machine with the following command:
+Run the Go Luck Simulator with the following command:
 
 ```sh
-./slotmachine
+./lucksimulator
 ```
 
-This command will start the game and you will see the initial game setup screen.
+This command will start the game and you will see the initial setup screen.
 
 ### Game Commands
 
@@ -78,7 +72,6 @@ Once the game is running, you will interact with it using the following commands
 
 ### Game Commands (play-mode)
 
-Once the game is running, you will interact with it using the following commands:
 
 - `RETURN`: Hitting the return button re-bets with your last bet.
 - `bet [bet amount]`: Places a bet of the specified amount.
@@ -88,7 +81,7 @@ Once the game is running, you will interact with it using the following commands
 - `stats`: Displays current game statistics, such as total spins, total wins, and current cash balance.
 - `exit`: Exits the game.
 
-If you are in the `info` or `stats` screen you should make a `bet` or `auto`-bet to get back to the slot machine.
+If you are in the `info` or `stats` screen you should make a `bet` or `auto`-bet to get back to the game screen.
 
 **Remember**: Hitting the `RETURN`-button will re-bet with your last bet.
 
@@ -105,7 +98,7 @@ A more detailed description is coming soon. Since then I recommend exploring the
 
 ## Customization
 
-The program is intended to be as modular as possible to encourage experimentation. Explore the following parts to learn more about their specific functionalities, configurations and potentials:
+Explore the following parts to learn more about their specific functionalities, configurations and potentials:
 
 ### Game Engine
 
@@ -113,11 +106,11 @@ The core logic and game mechanics of a specific game are implemented here. [Lear
 
 ### Randomness Module
 
-This module handles all random number generation used in the game. The program supports multiple algorithms to suit different needs. [Read about the randomness module.](internal/randomizer/README.md)
+This module handles all random number generation used in the game. The program supports multiple algorithms to suit different needs. [Learn more.](internal/randomizer/README.md)
 
 ## Contributing
 
-Thank you for your interest in contributing to the Go Slot Machine! This is my first open-source project, and I am excited to learn and grow with contributions from the community.
+Thank you for your interest in contributing to the Go Luck Simulator! This is my first open-source project, and I am excited to learn and grow with contributions from the community.
 
 ### How to Contribute
 
@@ -130,18 +123,11 @@ Since this is a learning experience for me as well, here are some basic steps to
 
 ### Questions or Suggestions?
 
-If you have questions about the project or need guidance on how to proceed, please feel free to open an issue in the repository. This is a learning experience for all of us, and every question or piece of feedback is valuable!
+If you have questions about the project or need guidance on how to proceed, please feel free to open an issue in the repository. Every question or piece of feedback is valuable!
 
 ## License
 
-The Go Slot Machine is open source and available under the GNU General Public License v3.0 (GPL-3.0). This license allows you to use, modify, and distribute the software, but all derivatives of this project must also be released under the same GPL-3.0 license.
+The Go Luck Simulator is open source and available under the GNU General Public License v3.0 (GPL-3.0). This license allows you to use, modify, and distribute the software, but all derivatives of this project must also be released under the same GPL-3.0 license.
 
 For more details, see the [LICENSE](LICENSE) file included in the repository.
 
-## Contact
-
-If you have any questions, feedback, or would like to contribute to the Go Slot Machine project, please feel free to reach out through my [Twitter/X Account](https://twitter.com/codebrancher) or on GitHub.
-
-For more detailed discussions, issue reporting, or to propose new features, consider opening an issue directly on the GitHub project page. This helps us keep track of all project-related discussions in one place.
-
-Your input is incredibly valuable, and I look forward to hearing from you!
