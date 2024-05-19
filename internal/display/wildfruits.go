@@ -196,6 +196,8 @@ func (cd *WildFruitsDisplay) Update(state *wildfruits.WildFruitObserverState) {
 	contentWidth := frameWidth - 2 // Width available for content between the borders
 	contentWidthUnicode := frameWidth - 4
 
+	rtp := utils.CalculateRTP(state.TotalWinAmount, state.TotalBetAmount)
+
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
 	utils.PrintBlankLine()
@@ -251,7 +253,7 @@ func (cd *WildFruitsDisplay) Update(state *wildfruits.WildFruitObserverState) {
 	rightValLine1 := fmt.Sprintf("Top Win: %d%s ", state.TopWinAmount, state.Currency)
 	utils.PrintWithMiddlePadding(leftValLine1, rightValLine1, contentWidth+2)
 	leftValLine2 := fmt.Sprintf(" Cash: %d%s", state.Amount, state.Currency)
-	rightValLine2 := fmt.Sprintf("Win Rate: %d%% ", int(state.WinRate))
+	rightValLine2 := fmt.Sprintf("RTP: %.1f%% ", rtp)
 	utils.PrintWithMiddlePadding(leftValLine2, rightValLine2, contentWidth+2)
 	utils.PrintBlankLine()
 	fmt.Println(border)

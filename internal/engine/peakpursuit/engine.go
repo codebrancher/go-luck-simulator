@@ -157,7 +157,7 @@ func (s *SlotMachine) RequestCommand(input string) (int, error) {
 			return 0, fmt.Errorf("invalid re-bet amount")
 		}
 		bet = s.State.LastBet
-	} else if input == "cashout" {
+	} else if input == "take" {
 		s.CashOut()
 		s.NotifyObservers()
 		return 0, nil
@@ -170,7 +170,7 @@ func (s *SlotMachine) RequestCommand(input string) (int, error) {
 
 		// Check if the new bet is different from the last bet and if there's an active pot
 		if bet != s.State.LastBet && s.hasActivePot() {
-			return 0, fmt.Errorf("cashout first")
+			return 0, fmt.Errorf("take first")
 		}
 
 		// Check if the bet exceeds available cash

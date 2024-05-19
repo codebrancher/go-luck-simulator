@@ -55,7 +55,7 @@ func (cd *PeakPursuitDisplay) ShowHelp() {
 	utils.PrintCentered("Commands", contentWidth)
 	utils.PrintIntermediaryLine()
 	utils.PrintBlankLine()
-	utils.PrintLeftAligned("cashout", contentWidth)
+	utils.PrintLeftAligned("take", contentWidth)
 	utils.PrintBlankLine()
 	utils.PrintLeftAligned("bet [amount]", contentWidth)
 	utils.PrintBlankLine()
@@ -82,7 +82,7 @@ func (cd *PeakPursuitDisplay) Update(state *peakpursuit.PeakPursuitObserverState
 	contentWidth := frameWidth - 2
 	contentWidthUnicode := frameWidth - 4
 
-	rtp := float64(state.TotalWinAmount) / float64(state.TotalBetAmount) * 100
+	rtp := utils.CalculateRTP(state.TotalWinAmount, state.TotalBetAmount)
 
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
@@ -93,13 +93,12 @@ func (cd *PeakPursuitDisplay) Update(state *peakpursuit.PeakPursuitObserverState
 	utils.PrintBlankLine()
 	utils.PrintIntermediaryLine()
 	utils.PrintCentered("Pot", contentWidth)
-	utils.PrintIntermediaryLine()
-	utils.PrintBlankLine()
 	if state.Winnings > 0 {
 		utils.PrintCentered("\033[48;5;22m      "+strconv.Itoa(state.Winnings)+"      \033[0m", contentWidth+14)
 	} else {
 		utils.PrintCentered(strconv.Itoa(state.Winnings), contentWidth)
 	}
+	utils.PrintIntermediaryLine()
 	utils.PrintBlankLine()
 
 	maxLevels := 0
@@ -162,10 +161,10 @@ func (cd *PeakPursuitDisplay) Update(state *peakpursuit.PeakPursuitObserverState
 	utils.PrintIntermediaryLine()
 	utils.PrintBlankLine()
 	leftValLine1 := fmt.Sprintf(" Bet: %d%s", state.LastBet, state.Currency)
-	rightValLine1 := fmt.Sprintf("RTP: %.1f%% ", rtp)
-	utils.PrintWithMiddlePadding(leftValLine1, rightValLine1, contentWidth+2)
+	utils.PrintWithMiddlePadding(leftValLine1, "", contentWidth+2)
 	leftValLine2 := fmt.Sprintf(" Cash: %d%s", state.Amount, state.Currency)
-	utils.PrintWithMiddlePadding(leftValLine2, "", contentWidth+2)
+	rightValLine2 := fmt.Sprintf("RTP: %.1f%% ", rtp)
+	utils.PrintWithMiddlePadding(leftValLine2, rightValLine2, contentWidth+2)
 	utils.PrintBlankLine()
 	fmt.Println(border)
 	fmt.Println()
@@ -210,7 +209,7 @@ func (cd *PeakPursuitDisplay) ShowInfo(symbols []peakpursuit.Symbol, game *peakp
 	utils.PrintIntermediaryLine()
 	utils.PrintCentered("Commands", contentWidth)
 	utils.PrintIntermediaryLine()
-	utils.PrintLeftAligned("cashout", contentWidth)
+	utils.PrintLeftAligned("take", contentWidth)
 	utils.PrintLeftAligned("bet [amount]", contentWidth)
 	utils.PrintLeftAligned("help", contentWidth)
 	utils.PrintIntermediaryLine()
