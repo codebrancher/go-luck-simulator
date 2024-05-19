@@ -75,7 +75,7 @@ Once the game is running, you will interact with it using the following commands
 - `RETURN`: Hitting the return button re-bets with your last bet.
 - `bet [bet amount]`: Places a bet of the specified amount.
 - `auto [spins] [bet amount]`: Automatically play a specified number of spins with a fixed bet amount.
-- `cashout`: Cash out if game has a winning pot.
+- `take`: Cash out if game has a winning pot.
 - `info`: Displays current game information, including available symbols, your current cash balance, and the wild symbol.
 - `stats`: Displays current game statistics, such as total spins, total wins, and current cash balance.
 - `exit`: Exits the game.
@@ -109,20 +109,7 @@ This module handles all random number generation used in the game. The program s
 
 ## Contributing
 
-Thank you for your interest in contributing to the Go Luck Simulator! This is my first open-source project, and I am excited to learn and grow with contributions from the community.
-
-### How to Contribute
-
-Since this is a learning experience for me as well, here are some basic steps to get involved:
-
-- **Explore the Project**: Take a look around the codebase to see what's already there and where you might be able to add value.
-- **Fork and Clone**: Make a fork of the repository, clone it to your machine, and set up a local development environment.
-- **Make Changes**: Work on the changes you think would enhance the project. This could be adding comments, refactoring code, or implementing new features.
-- **Submit a Pull Request**: Once you're happy with your changes, push them back to your fork and submit a pull request. I'll review it as soon as I can!
-
-### Questions or Suggestions?
-
-If you have questions about the project or need guidance on how to proceed, please feel free to open an issue in the repository. Every question or piece of feedback is valuable!
+Contributions are welcome! Please feel free to submit a pull request or open an issue for any bugs or feature requests.
 
 ## License
 

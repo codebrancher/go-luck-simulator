@@ -102,8 +102,8 @@ func (pm *PeakPursuitManager) Play() {
 		case "exit":
 			pm.Display.Show("Exiting game.")
 			return
-		case "cashout":
-			_, err := pm.Game.RequestCommand("cashout")
+		case "take":
+			_, err := pm.Game.RequestCommand("take")
 			if err != nil {
 				pm.Display.Show("Error: " + err.Error())
 			} else {
