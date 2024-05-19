@@ -21,7 +21,7 @@ func (su *StartUp) ShowStartupInfo() {
 	fmt.Println(border)
 	utils.PrintBlankLine()
 	utils.PrintBlankLine()
-	utils.PrintCentered("\033[39;1mThe Go Slot Machine!\033[0m", contentWidth+11)
+	utils.PrintCentered("\033[39;1mGoLuckSimulator\033[0m", contentWidth+11)
 	utils.PrintBlankLine()
 	utils.PrintBlankLine()
 	utils.PrintIntermediaryLine()

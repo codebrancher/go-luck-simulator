@@ -22,7 +22,9 @@ func (cd *WildFruitsDisplay) ShowStartupInfo(title string) {
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
 	utils.PrintBlankLine()
+	utils.PrintBlankLine()
 	utils.PrintCentered(title, contentWidth-2)
+	utils.PrintBlankLine()
 	utils.PrintBlankLine()
 	utils.PrintIntermediaryLine()
 	utils.PrintCentered("Commands", contentWidth)
@@ -78,8 +80,9 @@ func (cd *WildFruitsDisplay) ShowInfo(symbols []wildfruits.Symbol, game *wildfru
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
 	utils.PrintBlankLine()
-	utils.PrintCentered("The Go Slot Machine!", contentWidth)
+	utils.PrintBlankLine()
 	utils.PrintCentered(game.Title, contentWidthUnicode)
+	utils.PrintBlankLine()
 	utils.PrintBlankLine()
 	utils.PrintIntermediaryLine()
 
@@ -196,8 +199,9 @@ func (cd *WildFruitsDisplay) Update(state *wildfruits.WildFruitObserverState) {
 	border := strings.Repeat("=", frameWidth)
 	fmt.Println(border)
 	utils.PrintBlankLine()
-	utils.PrintCentered("The Go Slot Machine!", contentWidth)
+	utils.PrintBlankLine()
 	utils.PrintCentered(state.Title, contentWidthUnicode)
+	utils.PrintBlankLine()
 	utils.PrintBlankLine()
 	utils.PrintIntermediaryLine()
 	utils.PrintBlankLine()
@@ -205,9 +209,9 @@ func (cd *WildFruitsDisplay) Update(state *wildfruits.WildFruitObserverState) {
 	utils.PrintBlankLine()
 	fmt.Printf("|            [ %s ]            |\n", state.BonusSymbol)
 
-	if state.FreeGames > 0 {
+	if state.BonusGames > 0 {
 		utils.PrintBlankLine()
-		utils.PrintCentered(fmt.Sprintf("%d Bonus Games left!", state.FreeGames), contentWidth)
+		utils.PrintCentered(fmt.Sprintf("%d Bonus Games left!", state.BonusGames), contentWidth)
 	}
 	utils.PrintBlankLine()
 	fmt.Println("|       ================       |")

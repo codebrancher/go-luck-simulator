@@ -6,7 +6,7 @@ type WildFruitObserverState struct {
 	Wheels             [3][3]string
 	BonusSymbol        string
 	WinningDescription string
-	FreeGames          int
+	BonusGames         int
 	WinningPositions   map[int]map[int]bool
 	Currency           string
 }
@@ -20,6 +20,7 @@ func (s *SlotMachine) NotifyObservers() {
 		WinningPositions:    s.DisplayConfig.WinningPositions,
 		Currency:            s.GameConfig.Currency,
 		WildFruitsGameState: s.State,
+		BonusGames:          s.State.BonusGames,
 	}
 	s.observerManager.NotifyObservers(state)
 }
