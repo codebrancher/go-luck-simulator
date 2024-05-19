@@ -2,8 +2,8 @@ package display
 
 import (
 	"fmt"
-	"go-slot-machine/internal/engine/peakpursuit"
-	"go-slot-machine/internal/utils"
+	"go-luck-simulator/internal/engine/peakpursuit"
+	"go-luck-simulator/internal/utils"
 	"strconv"
 	"strings"
 	"time"

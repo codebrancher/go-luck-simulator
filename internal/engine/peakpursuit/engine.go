@@ -2,9 +2,9 @@ package peakpursuit
 
 import (
 	"fmt"
-	"go-slot-machine/internal/engine"
-	"go-slot-machine/internal/randomizer"
-	"go-slot-machine/internal/utils"
+	"go-luck-simulator/internal/engine"
+	"go-luck-simulator/internal/randomizer"
+	"go-luck-simulator/internal/utils"
 	"strconv"
 	"strings"
 	"time"

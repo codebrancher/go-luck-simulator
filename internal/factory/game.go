@@ -2,11 +2,11 @@ package factory
 
 import (
 	"fmt"
-	"go-slot-machine/internal/display"
-	"go-slot-machine/internal/engine/peakpursuit"
-	"go-slot-machine/internal/engine/wildfruits"
-	"go-slot-machine/internal/manager"
-	"go-slot-machine/internal/randomizer"
+	"go-luck-simulator/internal/display"
+	"go-luck-simulator/internal/engine/peakpursuit"
+	"go-luck-simulator/internal/engine/wildfruits"
+	"go-luck-simulator/internal/manager"
+	"go-luck-simulator/internal/randomizer"
 )
 
 func NewGame(gameType string, rng randomizer.Randomizer, startingCash int, currency string) (manager.Game, error) {

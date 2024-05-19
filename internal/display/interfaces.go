@@ -1,6 +1,6 @@
 package display
 
-import "go-slot-machine/internal/engine/wildfruits"
+import "go-luck-simulator/internal/engine/wildfruits"
 
 type Display interface {
 	Show(message string)

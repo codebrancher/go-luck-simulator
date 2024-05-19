@@ -3,8 +3,8 @@ package manager
 import (
 	"bufio"
 	"fmt"
-	"go-slot-machine/internal/display"
-	"go-slot-machine/internal/engine/peakpursuit"
+	"go-luck-simulator/internal/display"
+	"go-luck-simulator/internal/engine/peakpursuit"
 	"os"
 	"strconv"
 	"strings"
